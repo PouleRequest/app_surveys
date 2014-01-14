@@ -52,6 +52,7 @@ class Survey extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'questionGroups' => array(self::HAS_MANY, 'QuestionGroup', 'survey_id'),
+			'takings' => array(self::HAS_MANY, 'Taking', 'survey_id'),
 		);
 	}
 

@@ -48,6 +48,8 @@ class Taking extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'surveys' => array(self::BELONGS_TO, 'Survey', 'survey_id'),
+			'participations' => array(self::HAS_MANY, 'Participation', 'taking_id'),
 		);
 	}
 
