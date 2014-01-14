@@ -62,7 +62,7 @@ class PropositionsController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model=new Propositions;
+		$model=new Proposition;
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
@@ -122,7 +122,7 @@ class PropositionsController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Propositions');
+		$dataProvider=new CActiveDataProvider('Proposition');
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
@@ -133,7 +133,7 @@ class PropositionsController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$model=new Propositions('search');
+		$model=new Proposition('search');
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['Propositions']))
 			$model->attributes=$_GET['Propositions'];

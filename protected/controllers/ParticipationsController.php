@@ -62,7 +62,7 @@ class ParticipationsController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model=new Participations;
+		$model=new Participation;
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
@@ -122,7 +122,7 @@ class ParticipationsController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Participations');
+		$dataProvider=new CActiveDataProvider('Participation');
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
@@ -133,7 +133,7 @@ class ParticipationsController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$model=new Participations('search');
+		$model=new Participation('search');
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['Participations']))
 			$model->attributes=$_GET['Participations'];

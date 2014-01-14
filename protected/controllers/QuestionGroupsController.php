@@ -62,7 +62,7 @@ class QuestionGroupsController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model=new QuestionGroups;
+		$model=new QuestionGroup;
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
@@ -122,7 +122,7 @@ class QuestionGroupsController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('QuestionGroups');
+		$dataProvider=new CActiveDataProvider('QuestionGroup');
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
@@ -133,7 +133,7 @@ class QuestionGroupsController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$model=new QuestionGroups('search');
+		$model=new QuestionGroup('search');
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['QuestionGroups']))
 			$model->attributes=$_GET['QuestionGroups'];
