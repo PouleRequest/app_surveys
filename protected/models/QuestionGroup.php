@@ -1,31 +1,26 @@
 <?php
 
 /**
- * This is the model class for table "propositions".
+ * This is the model class for table "question_groups".
  *
- * The followings are the available columns in table 'propositions':
+ * The followings are the available columns in table 'question_groups':
  * @property integer $id
- * @property string $type
- * @property integer $question_id
- * @property integer $position
+ * @property integer $survey_id
  * @property string $title
- * @property string $answer_format
- * @property string $trigger_action
- * @property integer $trigger_target_id
- * @property string $trigger_target_type
+ * @property integer $position
  *
  * The followings are the available model relations:
- * @property AnsweredPropositions[] $answeredPropositions
- * @property Questions $question
+ * @property Surveys $survey
+ * @property Questions[] $questions
  */
-class Propositions extends CActiveRecord
+class QuestionGroup extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'propositions';
+		return 'question_groups';
 	}
 
 	/**
@@ -36,13 +31,12 @@ class Propositions extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('question_id, position', 'required'),
-			array('question_id, position, trigger_target_id', 'numerical', 'integerOnly'=>true),
-			array('type, trigger_action, trigger_target_type', 'length', 'max'=>63),
-			array('title, answer_format', 'length', 'max'=>255),
+			array('survey_id, position', 'required'),
+			array('survey_id, position', 'numerical', 'integerOnly'=>true),
+			array('title', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, type, question_id, position, title, answer_format, trigger_action, trigger_target_id, trigger_target_type', 'safe', 'on'=>'search'),
+			array('id, survey_id, title, position', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -54,8 +48,8 @@ class Propositions extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'answeredPropositions' => array(self::HAS_MANY, 'AnsweredPropositions', 'proposition_id'),
-			'question' => array(self::BELONGS_TO, 'Questions', 'question_id'),
+			'survey' => array(self::BELONGS_TO, 'Survey', 'survey_id'),
+			'questions' => array(self::HAS_MANY, 'Question', 'question_group_id'),
 		);
 	}
 
@@ -66,14 +60,9 @@ class Propositions extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'type' => 'Type',
-			'question_id' => 'Question',
-			'position' => 'Position',
+			'survey_id' => 'Survey',
 			'title' => 'Title',
-			'answer_format' => 'Answer Format',
-			'trigger_action' => 'Trigger Action',
-			'trigger_target_id' => 'Trigger Target',
-			'trigger_target_type' => 'Trigger Target Type',
+			'position' => 'Position',
 		);
 	}
 
@@ -96,14 +85,9 @@ class Propositions extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('type',$this->type,true);
-		$criteria->compare('question_id',$this->question_id);
-		$criteria->compare('position',$this->position);
+		$criteria->compare('survey_id',$this->survey_id);
 		$criteria->compare('title',$this->title,true);
-		$criteria->compare('answer_format',$this->answer_format,true);
-		$criteria->compare('trigger_action',$this->trigger_action,true);
-		$criteria->compare('trigger_target_id',$this->trigger_target_id);
-		$criteria->compare('trigger_target_type',$this->trigger_target_type,true);
+		$criteria->compare('position',$this->position);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -114,7 +98,7 @@ class Propositions extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return Propositions the static model class
+	 * @return QuestionGroups the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

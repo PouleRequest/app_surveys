@@ -1,23 +1,31 @@
 <?php
 
 /**
- * This is the model class for table "participations".
+ * This is the model class for table "propositions".
  *
- * The followings are the available columns in table 'participations':
+ * The followings are the available columns in table 'propositions':
  * @property integer $id
  * @property string $type
- * @property integer $taking_id
- * @property integer $person_id
- * @property string $participant_token
+ * @property integer $question_id
+ * @property integer $position
+ * @property string $title
+ * @property string $answer_format
+ * @property string $trigger_action
+ * @property integer $trigger_target_id
+ * @property string $trigger_target_type
+ *
+ * The followings are the available model relations:
+ * @property AnsweredPropositions[] $answeredPropositions
+ * @property Questions $question
  */
-class Participations extends CActiveRecord
+class Proposition extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'participations';
+		return 'propositions';
 	}
 
 	/**
@@ -28,12 +36,13 @@ class Participations extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('taking_id', 'required'),
-			array('taking_id, person_id', 'numerical', 'integerOnly'=>true),
-			array('type, participant_token', 'length', 'max'=>63),
+			array('question_id, position', 'required'),
+			array('question_id, position, trigger_target_id', 'numerical', 'integerOnly'=>true),
+			array('type, trigger_action, trigger_target_type', 'length', 'max'=>63),
+			array('title, answer_format', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, type, taking_id, person_id, participant_token', 'safe', 'on'=>'search'),
+			array('id, type, question_id, position, title, answer_format, trigger_action, trigger_target_id, trigger_target_type', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -45,6 +54,8 @@ class Participations extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'answeredPropositions' => array(self::HAS_MANY, 'AnsweredProposition', 'proposition_id'),
+			'question' => array(self::BELONGS_TO, 'Question', 'question_id'),
 		);
 	}
 
@@ -56,9 +67,13 @@ class Participations extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'type' => 'Type',
-			'taking_id' => 'Taking',
-			'person_id' => 'Person',
-			'participant_token' => 'Participant Token',
+			'question_id' => 'Question',
+			'position' => 'Position',
+			'title' => 'Title',
+			'answer_format' => 'Answer Format',
+			'trigger_action' => 'Trigger Action',
+			'trigger_target_id' => 'Trigger Target',
+			'trigger_target_type' => 'Trigger Target Type',
 		);
 	}
 
@@ -82,9 +97,13 @@ class Participations extends CActiveRecord
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('type',$this->type,true);
-		$criteria->compare('taking_id',$this->taking_id);
-		$criteria->compare('person_id',$this->person_id);
-		$criteria->compare('participant_token',$this->participant_token,true);
+		$criteria->compare('question_id',$this->question_id);
+		$criteria->compare('position',$this->position);
+		$criteria->compare('title',$this->title,true);
+		$criteria->compare('answer_format',$this->answer_format,true);
+		$criteria->compare('trigger_action',$this->trigger_action,true);
+		$criteria->compare('trigger_target_id',$this->trigger_target_id);
+		$criteria->compare('trigger_target_type',$this->trigger_target_type,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -95,7 +114,7 @@ class Participations extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return Participations the static model class
+	 * @return Propositions the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

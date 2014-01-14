@@ -1,29 +1,23 @@
 <?php
 
 /**
- * This is the model class for table "surveys".
+ * This is the model class for table "participations".
  *
- * The followings are the available columns in table 'surveys':
+ * The followings are the available columns in table 'participations':
  * @property integer $id
- * @property string $title
- * @property string $description
- * @property integer $created_for_id
- * @property integer $created_by_id
- * @property string $created_at
- * @property integer $updated_by_id
- * @property string $updated_at
- *
- * The followings are the available model relations:
- * @property QuestionGroups[] $questionGroups
+ * @property string $type
+ * @property integer $taking_id
+ * @property integer $person_id
+ * @property string $participant_token
  */
-class Surveys extends CActiveRecord
+class Participation extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'surveys';
+		return 'participations';
 	}
 
 	/**
@@ -34,12 +28,12 @@ class Surveys extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('created_for_id, created_by_id, updated_by_id', 'numerical', 'integerOnly'=>true),
-			array('title', 'length', 'max'=>255),
-			array('description, created_at, updated_at', 'safe'),
+			array('taking_id', 'required'),
+			array('taking_id, person_id', 'numerical', 'integerOnly'=>true),
+			array('type, participant_token', 'length', 'max'=>63),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, title, description, created_for_id, created_by_id, created_at, updated_by_id, updated_at', 'safe', 'on'=>'search'),
+			array('id, type, taking_id, person_id, participant_token', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -51,7 +45,6 @@ class Surveys extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'questionGroups' => array(self::HAS_MANY, 'QuestionGroups', 'survey_id'),
 		);
 	}
 
@@ -62,13 +55,10 @@ class Surveys extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'title' => 'Title',
-			'description' => 'Description',
-			'created_for_id' => 'Created For',
-			'created_by_id' => 'Created By',
-			'created_at' => 'Created At',
-			'updated_by_id' => 'Updated By',
-			'updated_at' => 'Updated At',
+			'type' => 'Type',
+			'taking_id' => 'Taking',
+			'person_id' => 'Person',
+			'participant_token' => 'Participant Token',
 		);
 	}
 
@@ -91,13 +81,10 @@ class Surveys extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('title',$this->title,true);
-		$criteria->compare('description',$this->description,true);
-		$criteria->compare('created_for_id',$this->created_for_id);
-		$criteria->compare('created_by_id',$this->created_by_id);
-		$criteria->compare('created_at',$this->created_at,true);
-		$criteria->compare('updated_by_id',$this->updated_by_id);
-		$criteria->compare('updated_at',$this->updated_at,true);
+		$criteria->compare('type',$this->type,true);
+		$criteria->compare('taking_id',$this->taking_id);
+		$criteria->compare('person_id',$this->person_id);
+		$criteria->compare('participant_token',$this->participant_token,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -108,7 +95,7 @@ class Surveys extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return Surveys the static model class
+	 * @return Participations the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

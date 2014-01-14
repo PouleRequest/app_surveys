@@ -1,27 +1,29 @@
 <?php
 
 /**
- * This is the model class for table "answered_propositions".
+ * This is the model class for table "surveys".
  *
- * The followings are the available columns in table 'answered_propositions':
+ * The followings are the available columns in table 'surveys':
  * @property integer $id
- * @property integer $answer_id
- * @property integer $proposition_id
- * @property string $body
- * @property integer $position
+ * @property string $title
+ * @property string $description
+ * @property integer $created_for_id
+ * @property integer $created_by_id
+ * @property string $created_at
+ * @property integer $updated_by_id
+ * @property string $updated_at
  *
  * The followings are the available model relations:
- * @property Answers $answer
- * @property Propositions $proposition
+ * @property QuestionGroups[] $questionGroups
  */
-class AnsweredPropositions extends CActiveRecord
+class Survey extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'answered_propositions';
+		return 'surveys';
 	}
 
 	/**
@@ -32,12 +34,12 @@ class AnsweredPropositions extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('answer_id, proposition_id', 'required'),
-			array('answer_id, proposition_id, position', 'numerical', 'integerOnly'=>true),
-			array('body', 'length', 'max'=>255),
+			array('created_for_id, created_by_id, updated_by_id', 'numerical', 'integerOnly'=>true),
+			array('title', 'length', 'max'=>255),
+			array('description, created_at, updated_at', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, answer_id, proposition_id, body, position', 'safe', 'on'=>'search'),
+			array('id, title, description, created_for_id, created_by_id, created_at, updated_by_id, updated_at', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -49,8 +51,7 @@ class AnsweredPropositions extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'answer' => array(self::BELONGS_TO, 'Answers', 'answer_id'),
-			'proposition' => array(self::BELONGS_TO, 'Propositions', 'proposition_id'),
+			'questionGroups' => array(self::HAS_MANY, 'QuestionGroup', 'survey_id'),
 		);
 	}
 
@@ -61,10 +62,13 @@ class AnsweredPropositions extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'answer_id' => 'Answer',
-			'proposition_id' => 'Proposition',
-			'body' => 'Body',
-			'position' => 'Position',
+			'title' => 'Title',
+			'description' => 'Description',
+			'created_for_id' => 'Created For',
+			'created_by_id' => 'Created By',
+			'created_at' => 'Created At',
+			'updated_by_id' => 'Updated By',
+			'updated_at' => 'Updated At',
 		);
 	}
 
@@ -87,10 +91,13 @@ class AnsweredPropositions extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('answer_id',$this->answer_id);
-		$criteria->compare('proposition_id',$this->proposition_id);
-		$criteria->compare('body',$this->body,true);
-		$criteria->compare('position',$this->position);
+		$criteria->compare('title',$this->title,true);
+		$criteria->compare('description',$this->description,true);
+		$criteria->compare('created_for_id',$this->created_for_id);
+		$criteria->compare('created_by_id',$this->created_by_id);
+		$criteria->compare('created_at',$this->created_at,true);
+		$criteria->compare('updated_by_id',$this->updated_by_id);
+		$criteria->compare('updated_at',$this->updated_at,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -101,7 +108,7 @@ class AnsweredPropositions extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return AnsweredPropositions the static model class
+	 * @return Surveys the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

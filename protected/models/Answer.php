@@ -1,26 +1,26 @@
 <?php
 
 /**
- * This is the model class for table "question_groups".
+ * This is the model class for table "answers".
  *
- * The followings are the available columns in table 'question_groups':
+ * The followings are the available columns in table 'answers':
  * @property integer $id
- * @property integer $survey_id
- * @property string $title
- * @property integer $position
+ * @property integer $participation_id
+ * @property integer $question_id
+ * @property string $created_at
+ * @property string $updated_at
  *
  * The followings are the available model relations:
- * @property Surveys $survey
- * @property Questions[] $questions
+ * @property AnsweredPropositions[] $answeredPropositions
  */
-class QuestionGroups extends CActiveRecord
+class Answer extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'question_groups';
+		return 'answers';
 	}
 
 	/**
@@ -31,12 +31,12 @@ class QuestionGroups extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('survey_id, position', 'required'),
-			array('survey_id, position', 'numerical', 'integerOnly'=>true),
-			array('title', 'length', 'max'=>255),
+			array('participation_id, question_id', 'required'),
+			array('participation_id, question_id', 'numerical', 'integerOnly'=>true),
+			array('created_at, updated_at', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, survey_id, title, position', 'safe', 'on'=>'search'),
+			array('id, participation_id, question_id, created_at, updated_at', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -48,8 +48,7 @@ class QuestionGroups extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'survey' => array(self::BELONGS_TO, 'Surveys', 'survey_id'),
-			'questions' => array(self::HAS_MANY, 'Questions', 'question_group_id'),
+			'answeredPropositions' => array(self::HAS_MANY, 'AnsweredProposition', 'answer_id'),
 		);
 	}
 
@@ -60,9 +59,10 @@ class QuestionGroups extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'survey_id' => 'Survey',
-			'title' => 'Title',
-			'position' => 'Position',
+			'participation_id' => 'Participation',
+			'question_id' => 'Question',
+			'created_at' => 'Created At',
+			'updated_at' => 'Updated At',
 		);
 	}
 
@@ -85,9 +85,10 @@ class QuestionGroups extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('survey_id',$this->survey_id);
-		$criteria->compare('title',$this->title,true);
-		$criteria->compare('position',$this->position);
+		$criteria->compare('participation_id',$this->participation_id);
+		$criteria->compare('question_id',$this->question_id);
+		$criteria->compare('created_at',$this->created_at,true);
+		$criteria->compare('updated_at',$this->updated_at,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -98,7 +99,7 @@ class QuestionGroups extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return QuestionGroups the static model class
+	 * @return Answers the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
