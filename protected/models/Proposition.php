@@ -54,8 +54,8 @@ class Proposition extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'answeredPropositions' => array(self::HAS_MANY, 'AnsweredProposition', 'proposition_id'),
-			'question' => array(self::BELONGS_TO, 'Question', 'question_id'),
+			'answeredPropositions' => array(self::HAS_MANY, 'AnsweredPropositions', 'proposition_id'),
+			'question' => array(self::BELONGS_TO, 'Questions', 'question_id'),
 		);
 	}
 
@@ -114,7 +114,7 @@ class Proposition extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return Propositions the static model class
+	 * @return Proposition the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

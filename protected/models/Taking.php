@@ -11,6 +11,10 @@
  * @property string $comment
  * @property string $starts_at
  * @property string $ends_at
+ *
+ * The followings are the available model relations:
+ * @property Participations[] $participations
+ * @property Surveys $survey
  */
 class Taking extends CActiveRecord
 {
@@ -48,8 +52,8 @@ class Taking extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'surveys' => array(self::BELONGS_TO, 'Survey', 'survey_id'),
-			'participations' => array(self::HAS_MANY, 'Participation', 'taking_id'),
+			'participations' => array(self::HAS_MANY, 'Participations', 'taking_id'),
+			'survey' => array(self::BELONGS_TO, 'Surveys', 'survey_id'),
 		);
 	}
 
@@ -104,7 +108,7 @@ class Taking extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return Takings the static model class
+	 * @return Taking the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
