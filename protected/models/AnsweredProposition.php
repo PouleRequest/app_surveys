@@ -49,8 +49,8 @@ class AnsweredProposition extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'answer' => array(self::BELONGS_TO, 'Answers', 'answer_id'),
-			'proposition' => array(self::BELONGS_TO, 'Propositions', 'proposition_id'),
+			'answer' => array(self::BELONGS_TO, 'Answer', 'answer_id'),
+			'proposition' => array(self::BELONGS_TO, 'Proposition', 'proposition_id'),
 		);
 	}
 

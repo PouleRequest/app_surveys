@@ -49,8 +49,8 @@ class Participation extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'answers' => array(self::HAS_MANY, 'Answers', 'participation_id'),
-			'taking' => array(self::BELONGS_TO, 'Takings', 'taking_id'),
+			'answers' => array(self::HAS_MANY, 'Answer', 'participation_id'),
+			'taking' => array(self::BELONGS_TO, 'Taking', 'taking_id'),
 		);
 	}
 

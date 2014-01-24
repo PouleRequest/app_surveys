@@ -48,8 +48,8 @@ class QuestionGroup extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'survey' => array(self::BELONGS_TO, 'Surveys', 'survey_id'),
-			'questions' => array(self::HAS_MANY, 'Questions', 'question_group_id'),
+			'survey' => array(self::BELONGS_TO, 'Survey', 'survey_id'),
+			'questions' => array(self::HAS_MANY, 'Question', 'question_group_id'),
 		);
 	}
 
