@@ -56,6 +56,8 @@ class Proposition extends CActiveRecord
 		return array(
 			'answeredPropositions' => array(self::HAS_MANY, 'AnsweredProposition', 'proposition_id'),
 			'question' => array(self::BELONGS_TO, 'Question', 'question_id'),
+			'questionGroup' => array(self::HAS_ONE, 'QuestionGroup', array('question_group_id' => 'id'), 'through'=>'question'),
+			'survey' => array(self::HAS_ONE, 'Survey', array('survey_id' => 'id'), 'through'=>'questionGroup')
 		);
 	}
 
