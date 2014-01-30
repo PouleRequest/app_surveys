@@ -7,13 +7,32 @@ class QuestionsController extends Controller
      * using two-column layout. See 'protected/views/layouts/column2.php'.
      */
     public $layout='//layouts/column2';
-
-
-
+    
+    
     /**
-     * Updates a particular model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id the ID of the model to be updated
+     * Create a new question.
+     * If creation is successful, the browser will be redirected to the survey editing page
+     */
+    public function actionCreate()
+    {
+        $question = new Question;
+        
+        if (isset($_POST['Question'])) {
+            $question->attributes=$_POST['Question'];
+            if ($question->save())
+                $this->redirect(array('survey/update', 'id'=>$question->survey->id));
+        }
+        
+        $this->render('create', array(
+            'question'=>$question,
+        ));
+    }
+    
+    
+    /**
+     * Updates a question.
+     * If update is successful, the browser will be redirected to the survey's update page
+     * @param integer $id the ID of the question to be updated
      */
     public function actionUpdate($id)
     {
@@ -33,6 +52,21 @@ class QuestionsController extends Controller
             'question'=>$question,
         ));
     }
+    
+    
+    /**
+     * Delete a question
+     * If successful, redirect to the survey editing page
+     * @param int $id the ID of the question to be deleted
+     */
+     public function actionDelete($id)
+     {
+         $question = $this->loadQuestion($id);
+         $surveyID = $question->survey->id;
+         $question->delete();
+         
+         $this->redirect(array('surveys/update', 'id'=>$surveyID));
+     }
 
 
     /**
