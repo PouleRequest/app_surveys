@@ -115,4 +115,34 @@ class Question extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+    
+    /**
+     * Before deleting a question, we must verify that his survey has no taking.
+     * And, I we can delete it, we have to delete his propositions first
+     */
+     public function beforeDelete() 
+     {
+         // TODO: Verify this with P. Hurni
+         if ($this->survey->takings != null) {
+             
+            // FIXME: Show an error message here
+            echo "This survey has already a taking. You cannot delete a question from this survey.";
+            return false;
+            
+         }
+         else {
+             
+             $propositions = $this->propositions;
+             $nbrPropositions = count($propositions);
+             
+             for ($i = 0; $i < $nbrPropositions; $i++) {
+                // TODO: FOR DEBUG
+                //$propositions[$i]->delete();
+                echo "deleting proposition id ". $propositions[$i]->id ." !<br />";
+             }
+             
+             // TODO: FOR DEBUG
+             return false;
+         }
+     }
 }

@@ -63,9 +63,11 @@ class QuestionsController extends Controller
      {
          $question = $this->loadQuestion($id);
          $surveyID = $question->survey->id;
-         $question->delete();
          
-         $this->redirect(array('surveys/update', 'id'=>$surveyID));
+         if ( $question->delete() )
+            $this->redirect(array('surveys/update', 'id'=>$surveyID));
+         else
+            $this->redirect(array('questions/update', 'id'=>$id));
      }
 
 
