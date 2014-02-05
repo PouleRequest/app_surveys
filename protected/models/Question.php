@@ -118,7 +118,7 @@ class Question extends CActiveRecord
     
     /**
      * Before deleting a question, we must verify that his survey has no taking.
-     * And, I we can delete it, we have to delete his propositions first
+     * And, we can delete it, we have to delete his propositions first
      */
      public function beforeDelete() 
      {
@@ -133,15 +133,14 @@ class Question extends CActiveRecord
          else {
              
              $propositions = $this->propositions;
-             $nbrPropositions = count($propositions);
-             
-             for ($i = 0; $i < $nbrPropositions; $i++) {
+             foreach($propositions as $oneProposition) {
                 // TODO: FOR DEBUG
-                //$propositions[$i]->delete();
-                echo "deleting proposition id ". $propositions[$i]->id ." !<br />";
+                //$oneProposition->delete();
+                echo "deleting proposition id ". $oneProposition->id ." !<br />";
              }
              
              // TODO: FOR DEBUG
+             // return true;
              return false;
          }
      }
