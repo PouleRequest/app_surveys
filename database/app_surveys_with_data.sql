@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 16, 2014 at 09:17 AM
+-- Generation Time: Feb 05, 2014 at 02:02 PM
 -- Server version: 5.6.11
 -- PHP Version: 5.5.1
 
@@ -21,6 +21,23 @@ SET time_zone = "+00:00";
 --
 CREATE DATABASE IF NOT EXISTS `app_surveys` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 USE `app_surveys`;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `answered_propositions`
+--
+
+CREATE TABLE IF NOT EXISTS `answered_propositions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `answer_id` int(11) NOT NULL,
+  `proposition_id` int(11) NOT NULL,
+  `body` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `position` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_answered_propositions_answers1_idx` (`answer_id`),
+  KEY `fk_answered_propositions_propositions1_idx` (`proposition_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=85 ;
 
 --
 -- Dumping data for table `answered_propositions`
@@ -40,7 +57,6 @@ INSERT INTO `answered_propositions` (`id`, `answer_id`, `proposition_id`, `body`
 (14, 21, 38, 'Aliquam erat volutpat.', 0),
 (15, 23, 57, 'consequat, lectus sit amet luctus vulputate,', 0),
 (16, 89, 83, 'tristique senectus et netus et malesuada fames', 4),
-(17, 59, 72, 'cursus in,', 1),
 (18, 12, 26, 'quis accumsan convallis, ante lectus convallis est,', 3),
 (19, 43, 68, 'est. Mauris eu turpis. Nulla aliquet. Proin', 3),
 (20, 42, 45, 'rutrum lorem ac risus. Morbi', 3),
@@ -56,7 +72,6 @@ INSERT INTO `answered_propositions` (`id`, `answer_id`, `proposition_id`, `body`
 (30, 96, 88, 'massa rutrum magna. Cras convallis', 2),
 (31, 99, 82, 'interdum libero', 4),
 (32, 53, 73, 'vitae aliquam eros turpis non enim.', 3),
-(33, 17, 43, 'lobortis ultrices.', 0),
 (34, 49, 73, 'risus a ultricies adipiscing,', 2),
 (35, 46, 24, 'eu tellus. Phasellus elit', 2),
 (36, 36, 41, 'semper, dui lectus rutrum urna, nec', 2),
@@ -69,7 +84,6 @@ INSERT INTO `answered_propositions` (`id`, `answer_id`, `proposition_id`, `body`
 (43, 50, 32, 'nulla ante, iaculis', 5),
 (44, 26, 17, 'ipsum dolor', 3),
 (45, 20, 38, 'odio sagittis semper. Nam tempor diam', 2),
-(46, 91, 98, 'Mauris vel turpis. Aliquam adipiscing lobortis risus.', 1),
 (47, 11, 80, 'cursus vestibulum. Mauris magna. Duis', 5),
 (48, 28, 45, 'ut, nulla.', 4),
 (49, 38, 45, 'ipsum cursus', 1),
@@ -92,7 +106,6 @@ INSERT INTO `answered_propositions` (`id`, `answer_id`, `proposition_id`, `body`
 (66, 85, 43, 'id ante dictum cursus. Nunc', 5),
 (67, 70, 56, 'pretium neque. Morbi quis urna. Nunc', 0),
 (68, 81, 41, 'posuere cubilia Curae; Phasellus ornare. Fusce mollis.', 4),
-(69, 54, 100, 'odio tristique pharetra. Quisque ac libero nec', 4),
 (70, 61, 58, 'imperdiet ullamcorper.', 3),
 (71, 11, 81, 'est mauris,', 5),
 (72, 71, 26, 'scelerisque mollis. Phasellus libero', 5),
@@ -108,6 +121,23 @@ INSERT INTO `answered_propositions` (`id`, `answer_id`, `proposition_id`, `body`
 (82, 67, 97, 'dui augue eu tellus. Phasellus', 0),
 (83, 93, 1, 'non, cursus', 4),
 (84, 75, 11, 'leo elementum sem, vitae', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `answers`
+--
+
+CREATE TABLE IF NOT EXISTS `answers` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `participation_id` int(11) NOT NULL,
+  `question_id` int(11) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_answers_participations1_idx` (`participation_id`),
+  KEY `fk_answers_questions1_idx` (`question_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=101 ;
 
 --
 -- Dumping data for table `answers`
@@ -130,7 +160,6 @@ INSERT INTO `answers` (`id`, `participation_id`, `question_id`, `created_at`, `u
 (14, 100, 140, '2014-10-19 05:42:48', '2014-04-09 07:23:46'),
 (15, 90, 168, '2015-01-07 07:26:11', '2014-01-15 18:45:06'),
 (16, 25, 164, '2014-10-01 00:09:01', '2014-02-27 07:50:17'),
-(17, 10, 102, '2014-03-27 19:10:06', '2013-11-09 10:00:03'),
 (18, 51, 192, '2013-08-08 03:47:39', '2013-12-12 14:53:54'),
 (19, 29, 127, '2014-11-02 23:49:00', '2013-04-06 12:02:48'),
 (20, 74, 169, '2013-03-14 12:54:59', '2014-05-26 02:00:03'),
@@ -170,7 +199,6 @@ INSERT INTO `answers` (`id`, `participation_id`, `question_id`, `created_at`, `u
 (54, 23, 188, '2014-09-02 05:00:42', '2013-04-17 03:58:53'),
 (55, 81, 179, '2014-06-12 23:11:43', '2014-04-09 10:23:14'),
 (56, 12, 138, '2013-08-04 21:03:32', '2014-07-06 11:16:49'),
-(57, 97, 119, '2014-07-02 15:57:29', '2014-03-28 02:57:47'),
 (58, 15, 154, '2013-10-02 14:19:32', '2013-10-27 19:41:25'),
 (59, 85, 150, '2013-09-11 16:18:12', '2013-08-29 03:11:31'),
 (60, 58, 170, '2013-06-24 14:50:10', '2014-03-17 04:19:04'),
@@ -182,7 +210,6 @@ INSERT INTO `answers` (`id`, `participation_id`, `question_id`, `created_at`, `u
 (66, 16, 180, '2014-02-27 11:16:50', '2013-03-14 09:53:07'),
 (67, 44, 111, '2013-11-20 23:18:32', '2013-07-22 09:19:42'),
 (68, 88, 145, '2014-04-17 04:06:45', '2013-09-19 17:58:30'),
-(69, 97, 117, '2013-11-12 09:32:17', '2013-01-18 19:52:54'),
 (70, 21, 154, '2013-07-23 16:20:58', '2014-09-11 08:43:21'),
 (71, 32, 118, '2013-08-16 12:04:21', '2013-05-03 05:03:59'),
 (72, 31, 142, '2013-06-17 07:55:38', '2014-05-16 03:25:25'),
@@ -204,7 +231,6 @@ INSERT INTO `answers` (`id`, `participation_id`, `question_id`, `created_at`, `u
 (88, 2, 140, '2013-08-09 06:06:09', '2014-10-14 16:18:10'),
 (89, 39, 146, '2014-12-12 23:43:10', '2013-02-12 11:18:46'),
 (90, 45, 104, '2013-09-12 08:09:21', '2013-07-05 08:14:08'),
-(91, 97, 151, '2014-10-21 19:49:27', '2013-04-02 04:05:25'),
 (92, 56, 180, '2014-01-23 04:18:20', '2013-10-21 20:53:31'),
 (93, 36, 158, '2013-01-20 20:44:01', '2013-04-24 14:20:31'),
 (94, 72, 148, '2013-03-09 08:07:06', '2014-10-20 15:23:29'),
@@ -214,6 +240,22 @@ INSERT INTO `answers` (`id`, `participation_id`, `question_id`, `created_at`, `u
 (98, 26, 152, '2014-12-28 16:00:14', '2013-10-10 00:19:49'),
 (99, 98, 118, '2014-03-21 05:00:15', '2014-12-30 08:46:26'),
 (100, 66, 127, '2013-10-11 14:29:16', '2014-01-20 07:10:10');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `participations`
+--
+
+CREATE TABLE IF NOT EXISTS `participations` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(63) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `taking_id` int(11) NOT NULL,
+  `person_id` int(11) DEFAULT NULL,
+  `participant_token` varchar(63) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_participations_takings1_idx` (`taking_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=101 ;
 
 --
 -- Dumping data for table `participations`
@@ -239,7 +281,6 @@ INSERT INTO `participations` (`id`, `type`, `taking_id`, `person_id`, `participa
 (17, 'AnonymousParticipation', 4, 362, '60BFD4F4-9770-B710-AB8D-D7C7A0948166'),
 (18, 'AnonymousParticipation', 3, 224, 'FF823C10-F5C9-F3CD-F346-8BF26DC2AC82'),
 (19, 'AnonymousParticipation', 2, 486, '67273DBD-743A-8D45-A27F-0E5F53225746'),
-(20, 'AnonymousParticipation', 19, 220, '8524BA0A-57D5-AE41-B27A-09DC68E222A2'),
 (21, 'AnonymousParticipation', 14, 302, '32217A7F-32F4-BF41-4771-7DABC7031DC3'),
 (22, 'AnonymousParticipation', 12, 347, '9C1CA989-39BA-1B57-36F3-57FB9DD8F28C'),
 (23, 'AnonymousParticipation', 3, 361, '80E54C2E-FA1D-9F9D-3D2B-D4F59C7855D3'),
@@ -273,10 +314,8 @@ INSERT INTO `participations` (`id`, `type`, `taking_id`, `person_id`, `participa
 (51, 'KnownParticipation', 10, 242, '2F2417AD-7CF2-0518-D22A-BC2A1342D70A'),
 (52, 'AnonymousParticipation', 11, 371, '4D6E9A0A-857B-EF43-A8F5-8F6B7815CC0F'),
 (53, 'KnownParticipation', 10, 416, '7C7AB432-10A2-F3A1-4EE2-E5331AE3DB5C'),
-(54, 'AnonymousParticipation', 19, 219, '21E0A805-1EEE-076D-7298-C59FC766594F'),
 (55, 'AnonymousParticipation', 9, 216, '0ECFC899-563E-029F-5E5F-7B00D62B82C5'),
 (56, 'KnownParticipation', 11, 496, 'BC5CDB15-0C77-150D-DCFF-3135FE92604D'),
-(57, 'AnonymousParticipation', 19, 372, 'FA4EB4F5-32BD-FD38-7ECF-DDFFF09AB105'),
 (58, 'AnonymousParticipation', 8, 390, '2A912579-3587-AD61-C280-6B30DEEB0A5E'),
 (59, 'KnownParticipation', 9, 288, 'DE510F34-C32C-11E5-7461-4B5C764F9481'),
 (60, 'AnonymousParticipation', 5, 283, 'DF2AD153-C60C-6872-BC29-31944E2A7A6E'),
@@ -316,10 +355,29 @@ INSERT INTO `participations` (`id`, `type`, `taking_id`, `person_id`, `participa
 (94, 'AnonymousParticipation', 15, 267, '02DBE42C-035A-46BA-9A09-2F0584F65EF6'),
 (95, 'KnownParticipation', 5, 480, 'A2B9C93A-08E3-E392-243E-42FF69E47698'),
 (96, 'AnonymousParticipation', 17, 337, '276650C3-B834-1B3D-841F-611F5108C674'),
-(97, 'AnonymousParticipation', 19, 339, '9D7AAF0C-3733-5004-13DB-0714337404B4'),
 (98, 'AnonymousParticipation', 3, 244, '40501675-703E-B2BA-1C15-11E3E2E2A883'),
 (99, 'KnownParticipation', 13, 233, '645DFC52-4F24-8599-8667-B2E3914C01A9'),
 (100, 'AnonymousParticipation', 16, 429, 'D1A8F67D-4894-5A2A-80AD-EF46EA370A7E');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `propositions`
+--
+
+CREATE TABLE IF NOT EXISTS `propositions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(63) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `question_id` int(11) NOT NULL,
+  `position` int(11) NOT NULL,
+  `title` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `answer_format` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `trigger_action` varchar(63) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `trigger_target_id` int(11) DEFAULT NULL,
+  `trigger_target_type` varchar(63) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_propositions_questions1_idx` (`question_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=102 ;
 
 --
 -- Dumping data for table `propositions`
@@ -423,9 +481,27 @@ INSERT INTO `propositions` (`id`, `type`, `question_id`, `position`, `title`, `a
 (95, 'OpenedProposition', 134, 3, 'a', '.*', NULL, NULL, NULL),
 (96, 'ClosedProposition', 142, 2, 'cursus', '', NULL, NULL, NULL),
 (97, 'OpenedProposition', 121, 1, 'ac sem', '.*', NULL, NULL, NULL),
-(98, 'ClosedProposition', 174, 0, 'sagittis. Duis gravida. Praesent', '', NULL, NULL, NULL),
+(98, 'ClosedProposition', 174, 0, 'ceci est un titre', '', NULL, NULL, NULL),
 (99, 'OpenedProposition', 110, 3, 'Sed', '.*', NULL, NULL, NULL),
-(100, 'ClosedProposition', 161, 1, 'placerat eget,', '', NULL, NULL, NULL);
+(100, 'ClosedProposition', 161, 1, 'placerat eget,', '', NULL, NULL, NULL),
+(101, 'ClosedProposition', 102, 0, 'asdrfg', '', NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `questions`
+--
+
+CREATE TABLE IF NOT EXISTS `questions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(63) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `question_group_id` int(11) NOT NULL,
+  `title` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `position` int(11) NOT NULL,
+  `settings` varchar(1023) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_questions_question_groups1_idx` (`question_group_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=202 ;
 
 --
 -- Dumping data for table `questions`
@@ -433,7 +509,7 @@ INSERT INTO `propositions` (`id`, `type`, `question_id`, `position`, `title`, `a
 
 INSERT INTO `questions` (`id`, `type`, `question_group_id`, `title`, `position`, `settings`) VALUES
 (1, 'UniqueChoiceQuestion', 4, 'euismod ac, fermentum vel, mauris.', 7, ''),
-(102, 'UniqueChoiceQuestion', 9, 'urna et arcu imperdiet ullamcorper.', 6, ''),
+(102, 'UniqueChoiceQuestion', 9, 'tggmcor654', 6, ''),
 (103, 'UniqueChoiceQuestion', 9, 'blandit mattis.', 1, ''),
 (104, 'UniqueChoiceQuestion', 1, 'vehicula. Pellentesque tincidunt', 7, ''),
 (105, 'UniqueChoiceQuestion', 5, 'iaculis odio. Nam interdum', 8, ''),
@@ -534,6 +610,21 @@ INSERT INTO `questions` (`id`, `type`, `question_group_id`, `title`, `position`,
 (200, 'RankingQuestion', 4, 'ipsum dolor', 3, ''),
 (201, 'RankingQuestion', 6, 'interdum', 7, '');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `question_groups`
+--
+
+CREATE TABLE IF NOT EXISTS `question_groups` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `survey_id` int(11) NOT NULL,
+  `title` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `position` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_question_groups_surveys_idx` (`survey_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=11 ;
+
 --
 -- Dumping data for table `question_groups`
 --
@@ -550,6 +641,24 @@ INSERT INTO `question_groups` (`id`, `survey_id`, `title`, `position`) VALUES
 (9, 3, 'lectus justo eu arcu.', 0),
 (10, 3, 'ridiculus mus. Aenean eget magna. Suspendisse', 0);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `surveys`
+--
+
+CREATE TABLE IF NOT EXISTS `surveys` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `description` text COLLATE utf8_unicode_ci,
+  `created_for_id` int(11) DEFAULT NULL,
+  `created_by_id` int(11) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_by_id` int(11) DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=11 ;
+
 --
 -- Dumping data for table `surveys`
 --
@@ -565,6 +674,24 @@ INSERT INTO `surveys` (`id`, `title`, `description`, `created_for_id`, `created_
 (8, 'pharetra', 'risus. Duis a mi fringilla mi lacinia mattis. Integer eu', 5, 4, '1969-12-31 16:00:00', 7, '1969-12-31 16:00:00'),
 (9, 'senectus et netus et malesuada', 'velit eu sem. Pellentesque ut ipsum ac mi eleifend egestas. Sed', 1, 4, '1969-12-31 16:00:00', 2, '1969-12-31 16:00:00'),
 (10, 'urna suscipit nonummy. Fusce', 'placerat velit. Quisque varius. Nam porttitor scelerisque neque. Nullam nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin', 1, 6, '1969-12-31 16:00:00', 2, '1969-12-31 16:00:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `takings`
+--
+
+CREATE TABLE IF NOT EXISTS `takings` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `survey_id` int(11) NOT NULL,
+  `anonymous` tinyint(1) NOT NULL DEFAULT '0',
+  `state` varchar(31) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `comment` text COLLATE utf8_unicode_ci,
+  `starts_at` datetime DEFAULT NULL,
+  `ends_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_takings_surveys1_idx` (`survey_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=21 ;
 
 --
 -- Dumping data for table `takings`
@@ -589,8 +716,55 @@ INSERT INTO `takings` (`id`, `survey_id`, `anonymous`, `state`, `comment`, `star
 (16, 10, 0, 'created', 'aliquet lobortis, nisi nibh', '2014-01-13 03:22:00', '2014-01-30 20:01:30'),
 (17, 7, 1, 'finished', 'Aliquam nisl.', '2013-06-11 04:01:36', '2013-11-11 08:02:51'),
 (18, 4, 1, 'created', 'Sed eu nibh vulputate mauris sagittis', '2013-11-28 13:00:56', '2014-12-17 17:05:53'),
-(19, 3, 1, 'created', 'fermentum risus, at fringilla purus mauris a nunc. In', '2013-12-24 10:44:16', '2014-10-27 22:30:00'),
 (20, 1, 1, 'running', 'nec, malesuada ut,', '2014-02-07 16:54:09', '2013-08-21 16:06:04');
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `answered_propositions`
+--
+ALTER TABLE `answered_propositions`
+  ADD CONSTRAINT `fk_answered_propositions_answers1` FOREIGN KEY (`answer_id`) REFERENCES `answers` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_answered_propositions_propositions1` FOREIGN KEY (`proposition_id`) REFERENCES `propositions` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `answers`
+--
+ALTER TABLE `answers`
+  ADD CONSTRAINT `answers_ibfk_1` FOREIGN KEY (`participation_id`) REFERENCES `participations` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `answers_ibfk_2` FOREIGN KEY (`question_id`) REFERENCES `questions` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `participations`
+--
+ALTER TABLE `participations`
+  ADD CONSTRAINT `participations_ibfk_1` FOREIGN KEY (`taking_id`) REFERENCES `takings` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `propositions`
+--
+ALTER TABLE `propositions`
+  ADD CONSTRAINT `fk_propositions_questions1` FOREIGN KEY (`question_id`) REFERENCES `questions` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `questions`
+--
+ALTER TABLE `questions`
+  ADD CONSTRAINT `fk_questions_question_groups1` FOREIGN KEY (`question_group_id`) REFERENCES `question_groups` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `question_groups`
+--
+ALTER TABLE `question_groups`
+  ADD CONSTRAINT `fk_question_groups_surveys` FOREIGN KEY (`survey_id`) REFERENCES `surveys` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `takings`
+--
+ALTER TABLE `takings`
+  ADD CONSTRAINT `takings_ibfk_1` FOREIGN KEY (`survey_id`) REFERENCES `surveys` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
