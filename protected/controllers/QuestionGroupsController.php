@@ -30,10 +30,6 @@ class QuestionGroupsController extends Controller
            		$lastPosition = ($lastPosition < $questionGroupOfSurvey->position ? ($questionGroupOfSurvey->position + 1) : $lastPosition);
         	$questionGroup->position = $lastPosition;
 
-
-			if(!isset($questionGroup->position))
-				$questionGroup->position = 0; //TODO: get the next available value
-
 			if($questionGroup->save())
 				$this->redirect(array('view','id'=>$questionGroup->id));
 		}
