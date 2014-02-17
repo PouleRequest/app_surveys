@@ -22,17 +22,14 @@ class QuestionGroupsController extends Controller
 		if(isset($_POST['QuestionGroup']))
 		{
 			$questionGroup->attributes=$_POST['QuestionGroup'];
-			$questionGroup->survey_id = 1;
+
+			$questionGroup->survey_id = 1; //TODO: get that ID automatically. See the work on "questions" done by FireGhost
 			
 			$allQuestionGroupsOfSurvey = $questionGroup->survey->questionGroups;
         	$lastPosition = 0;
         	foreach ($allQuestionGroupsOfSurvey as $questionGroupOfSurvey)
            		$lastPosition = ($lastPosition < $questionGroupOfSurvey->position ? ($questionGroupOfSurvey->position + 1) : $lastPosition);
         	$questionGroup->position = $lastPosition;
-
-
-			if(!isset($questionGroup->position))
-				$questionGroup->position = 0; //TODO: get the next available value
 
 			if($questionGroup->save())
 				$this->redirect(array('view','id'=>$questionGroup->id));
