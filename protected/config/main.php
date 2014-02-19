@@ -39,9 +39,12 @@ return array(
 		'urlManager'=>array(
 			'urlFormat'=>'path',
 			'rules'=>array(
+                'groups/<gid:\d+>/<controller:questions>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
+                'groups/<gid:\d+>/<controller:questions>/<action:\w+>'=>'<controller>/<action>',
+                
 				'<controller:\w+>/<id:\d+>'=>'<controller>/view',
-				'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
-				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
+                '<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
+                '<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
 			),
 		),
 		/*

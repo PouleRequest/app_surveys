@@ -17,11 +17,36 @@ class QuestionsController extends Controller
     {
         $question = new Question;
         
+        
         if (isset($_POST['Question'])) {
+            
+            // Prepare the 'settings' field for the DB
+            $_POST['Question']['settings'] = json_encode( array_filter($_POST['Question']['settings']) );
+            
+            // Take the good questionGroup id from the survey/update page and verify it
+            if (isset($_GET['gid']))
+                $question->question_group_id = $_GET['gid'];
+            else
+                throw new CHttpException(404, 'The question group ID is not specified. To create a question, use the link in the survey edit page.');
+            
+            if ($question->questionGroup == null)
+                throw new CHttpException(404, 'The question group assiocated to this question does not exist. To create a question, use the link in the survey edit page.');
+            
+            // Add one to the last question of the QuestionGroup
+            if (! isset($_POST['Question']['position'])) {
+                $allQuestionsOfQuestionGroup = $question->questionGroup->questions;
+                $lastPosition = 0; 
+                foreach ($allQuestionsOfQuestionGroup as $questionOfQuestionGroup)
+                    $lastPosition = ($lastPosition < $questionOfQuestionGroup->position ? ($questionOfQuestionGroup->position + 1) : $lastPosition);
+                $question->position = $lastPosition;
+            }
+            
             $question->attributes=$_POST['Question'];
             if ($question->save())
                 $this->redirect(array('survey/update', 'id'=>$question->survey->id));
         }
+        
+        
         
         $this->render('create', array(
             'question'=>$question,
