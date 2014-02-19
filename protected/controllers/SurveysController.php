@@ -8,8 +8,6 @@ class SurveysController extends Controller
 	 */
 	public $layout='//layouts/column2';
 
-
-
 	/**
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
@@ -47,5 +45,4 @@ class SurveysController extends Controller
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $survey;
 	}
-
 }

@@ -8,8 +8,6 @@ class QuestionsController extends Controller
      */
     public $layout='//layouts/column2';
 
-
-
     /**
      * Updates a particular model.
      * If update is successful, the browser will be redirected to the 'view' page.
