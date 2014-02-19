@@ -1,6 +1,6 @@
 <?php
 
-class SurveysController extends Controller
+class TakingsController extends Controller
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -14,20 +14,22 @@ class SurveysController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$survey=new Survey;
+		$taking=new Taking;
 
 		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($survey);
+		// $this->performAjaxValidation($taking);
 
-		if(isset($_POST['Survey']))
+		if(isset($_POST['Taking']))
 		{
-			$survey->attributes=$_POST['Survey'];
-			if($survey->save())
-				$this->redirect(array('view','id'=>$survey->id));
+			$taking->survey_id = 1; //TODO: get that ID automatically. See the work on "questions" done by FireGhost
+			$taking->state = "created";
+			$taking->attributes=$_POST['Taking'];
+			if($taking->save())
+				$this->redirect(array('view','id'=>$taking->id));
 		}
 
 		$this->render('create',array(
-			'survey'=>$survey,
+			'taking'=>$taking,
 		));
 	}
 
@@ -35,14 +37,14 @@ class SurveysController extends Controller
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
 	 * @param integer $id the ID of the model to be loaded
-	 * @return Survey the loaded model
+	 * @return Taking the loaded model
 	 * @throws CHttpException
 	 */
-	public function loadSurvey($id)
+	public function loadTaking($id)
 	{
-		$survey=Survey::model()->findByPk($id);
-		if($survey===null)
+		$taking=Taking::model()->findByPk($id);
+		if($taking===null)
 			throw new CHttpException(404,'The requested page does not exist.');
-		return $survey;
+		return $taking;
 	}
 }
