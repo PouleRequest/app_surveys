@@ -117,4 +117,10 @@ class Survey extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+    
+    public function hasStartedTakings()
+    {
+        return empty($this->takings) ? false : in_array(false, array_map(function($taking) { return $taking->state == 'created'; } , $this->takings));
+    }
+    
 }

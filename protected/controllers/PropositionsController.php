@@ -9,7 +9,13 @@ class PropositionsController extends Controller
      */
     public $layout='//layouts/column2';
 
-
+    public function filters()
+    {
+        return array(
+            'CanModifySurvey + update, create, delete',
+        );
+    }
+    
 
     /**
      * Updates a particular model.
@@ -34,24 +40,7 @@ class PropositionsController extends Controller
             'proposition'=>$proposition,
         ));
     }
-
-
-    /**
-     * Returns the data model based on the primary key given in the GET variable.
-     * If the data model is not found, an HTTP exception will be raised.
-     * @param integer $id the ID of the model to be loaded
-     * @return Question the loaded model
-     * @throws CHttpException
-     */
-    public function loadProposition($id)
-    {
-        $proposition=Proposition::model()->findByPk($id);
-        if($proposition===null)
-            throw new CHttpException(404,'The requested page does not exist.');
-        return $proposition;
-    }
-
-
+    
 	/**
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
@@ -79,4 +68,41 @@ class PropositionsController extends Controller
 			'model'=>$proposition,
 		));
 	}
+          
+    /**
+	 * Deletes a particular proposition.
+	 * If deletion is successful, the browser will be redirected to the 'admin' page.
+	 * @param integer $id the ID of the proposition to be deleted
+	 */
+	public function actionDelete($id)
+	{
+		$this->loadProposition($id)->delete();
+
+		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+		if(!isset($_GET['ajax']))
+			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+	}
+    
+    /**
+     * Returns the data model based on the primary key given in the GET variable.
+     * If the data model is not found, an HTTP exception will be raised.
+     * @param integer $id the ID of the model to be loaded
+     * @return Question the loaded model
+     * @throws CHttpException
+     */
+    public function loadProposition($id)
+    {
+        $proposition=Proposition::model()->findByPk($id);
+        if($proposition===null)
+            throw new CHttpException(404,'The requested page does not exist.');
+        return $proposition;
+    }
+    
+    /**
+    *
+    */
+    public function filterCanModifySurvey()
+    {
+        return !$this->question->survey->hasStartedTakings();      
+    }  
 }
