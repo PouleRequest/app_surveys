@@ -69,14 +69,7 @@ class PropositionsController extends Controller
 
 			$proposition->question_id = 102; //TODO: get that ID automatically. See the work on "questions" done by FireGhost
 			
-			//TODO: use the Max value once it's implemented in CActiveRecord
-			$allPropositionsOfQuestion = $proposition->question->propositions;
-        	$lastPosition = 0;
-        	foreach ($allPropositionsOfQuestion as $propositionOfQuestion)
-           		$lastPosition = ($lastPosition < $propositionOfQuestion->position ? ($propositionOfQuestion->position + 1) : $lastPosition);
-        	$proposition->position = $lastPosition;
-
-
+        	$proposition->position = $proposition->question->maxProposition+1;
 
 			if($proposition->save())
 				$this->redirect(array('view','id'=>$proposition->id));
