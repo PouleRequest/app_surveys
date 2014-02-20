@@ -21,6 +21,7 @@ class QuestionsController extends Controller
         if (isset($_POST['Question'])) {
             
             // Prepare the 'settings' field for the DB
+            // WARNING: array_filter will delete the '0' entries
             $_POST['Question']['settings'] = json_encode( array_filter($_POST['Question']['settings']) );
             
             // Take the good questionGroup id from the survey/update page and verify it
