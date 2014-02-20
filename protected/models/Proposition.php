@@ -43,9 +43,9 @@ class Proposition extends CActiveRecord
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('id, type, question_id, position, title, answer_format, trigger_action, trigger_target_id, trigger_target_type', 'safe', 'on'=>'search'),
-		);
+            
+        );
 	}
-
 	/**
 	 * @return array relational rules.
 	 */
