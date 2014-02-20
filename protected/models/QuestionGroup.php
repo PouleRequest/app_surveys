@@ -50,7 +50,7 @@ class QuestionGroup extends CActiveRecord
 		return array(
 			'survey' => array(self::BELONGS_TO, 'Survey', 'survey_id'),
 			'questions' => array(self::HAS_MANY, 'Question', 'question_group_id'),
-			'maxQuestion' => array(self::STAT, 'Question', 'question_group_id', array('select' => 'MAX(position)') )
+			'maxQuestion' => array(self::STAT, 'Question', 'question_group_id', 'select' => 'MAX(position)' )
 		);
 	}
 
