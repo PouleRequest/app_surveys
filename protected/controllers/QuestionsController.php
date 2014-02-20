@@ -32,13 +32,9 @@ class QuestionsController extends Controller
             if ($question->questionGroup == null)
                 throw new CHttpException(404, 'The question group assiocated to this question does not exist. To create a question, use the link in the survey edit page.');
             
-            // Add one to the last question of the QuestionGroup
+            // Add one to the position of the last question in the QuestionGroup
             if (! isset($_POST['Question']['position'])) {
-                $allQuestionsOfQuestionGroup = $question->questionGroup->questions;
-                $lastPosition = 0; 
-                foreach ($allQuestionsOfQuestionGroup as $questionOfQuestionGroup)
-                    $lastPosition = ($lastPosition < $questionOfQuestionGroup->position ? ($questionOfQuestionGroup->position + 1) : $lastPosition);
-                $question->position = $lastPosition;
+                $question->position = $question->questionGroup->maxQuestion + 1;
             }
             
             $question->attributes=$_POST['Question'];
