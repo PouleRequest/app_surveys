@@ -7,7 +7,15 @@ class QuestionsController extends Controller
      * using two-column layout. See 'protected/views/layouts/column2.php'.
      */
     public $layout='//layouts/column2';
+
+    protected $questionGroup;
     
+    public function filters()
+    {
+        return array(
+            'GetQuestionGroup + create',
+        );
+    }
     
     /**
      * Create a new question.
@@ -16,22 +24,13 @@ class QuestionsController extends Controller
     public function actionCreate()
     {
         $question = new Question;
-        
+        $question->questionGroup = $this->questionGroup;
         
         if (isset($_POST['Question'])) {
             
             // Prepare the 'settings' field for the DB
             // WARNING: array_filter will delete the '0' entries
             $_POST['Question']['settings'] = json_encode( array_filter($_POST['Question']['settings']) );
-            
-            // Take the good questionGroup id from the survey/update page and verify it
-            if (isset($_GET['gid']))
-                $question->question_group_id = $_GET['gid'];
-            else
-                throw new CHttpException(404, 'The question group ID is not specified. To create a question, use the link in the survey edit page.');
-            
-            if ($question->questionGroup == null)
-                throw new CHttpException(404, 'The question group assiocated to this question does not exist. To create a question, use the link in the survey edit page.');
             
             // Add one to the position of the last question in the QuestionGroup
             if (! isset($_POST['Question']['position'])) {
@@ -106,6 +105,19 @@ class QuestionsController extends Controller
         if($question===null)
             throw new CHttpException(404,'The requested page does not exist.');
         return $question;
+    }
+
+    public function filterGetQuestionGroup($filterChain)
+    {
+        // Take the good questionGroup id from the survey/update page and verify it
+        if (isset($_GET['gid'])) {
+            if (!($this->questionGroup = QuestionGroup::model()->findByPk($_GET['gid'])))
+                throw new CHttpException(404, 'The question group assiocated to this question does not exist. To create a question, use the link in the survey edit page.');
+        }
+        else
+            throw new CHttpException(404, 'The question group ID is not specified. To create a question, use the link in the survey edit page.');
+        
+        $filterChain->run();
     }
 
 }
