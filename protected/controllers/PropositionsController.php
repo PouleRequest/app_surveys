@@ -8,15 +8,17 @@ class PropositionsController extends Controller
      * using two-column layout. See 'protected/views/layouts/column2.php'.
      */
     public $layout='//layouts/column2';
+    
+    protected $question;
 
     public function filters()
     {
         return array(
+            'GetQuestion', 
             'CanModifySurvey + update, create, delete',
         );
     }
     
-
     /**
      * Updates a particular model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -98,11 +100,22 @@ class PropositionsController extends Controller
         return $proposition;
     }
     
-    /**
-    *
-    */
-    public function filterCanModifySurvey()
+    public function filterCanModifySurvey($filterChain)
     {
-        return !$this->question->survey->hasStartedTakings();      
+        if ($this->question->survey->hasStartedTakings())
+            $this->render('//questions/error');
+        else
+            $filterChain->run();
+    }  
+    
+    public function filterGetQuestion($filterChain)
+    {
+        if (isset($_GET['qid']))
+            $this->question = Question::model()->findByPk($_GET['qid']);
+        else
+        {
+            $this->question = $this->loadProposition($_GET['id'])->question;
+        }
+        $filterChain->run();
     }  
 }
