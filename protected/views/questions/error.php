@@ -1,0 +1,1 @@
+<p>Impossible de supprimer cette proposition</p>
