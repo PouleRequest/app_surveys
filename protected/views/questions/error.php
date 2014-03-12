@@ -1,1 +1,1 @@
-<p>Impossible de supprimer cette proposition</p>
+<h2>Impossible de supprimer cette proposition</h2>

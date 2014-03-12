@@ -54,6 +54,7 @@ class Survey extends CActiveRecord
 		return array(
 			'questionGroups' => array(self::HAS_MANY, 'QuestionGroup', 'survey_id'),
 			'takings' => array(self::HAS_MANY, 'Taking', 'survey_id'),
+			'maxQuestionGroup' => array(self::STAT, 'QuestionGroup', 'survey_id', 'select'=>'MAX(position)')
 		);
 	}
 

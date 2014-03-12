@@ -16,7 +16,7 @@
  * @property Propositions[] $propositions
  * @property QuestionGroups $questionGroup
  */
-class Question extends CActiveRecord
+class Question extends MortimerActiveRecord
 {
     
     /**
