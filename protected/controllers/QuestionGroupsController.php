@@ -47,6 +47,29 @@ class QuestionGroupsController extends Controller
 		));
 	}
 
+    /**
+     * Updates a questiongroup.
+     * If update is successful, the browser will be redirected to the survey's update page
+     * @param integer $id the ID of the questiongroup to be updated
+     */
+    public function actionUpdate($id)
+    {
+        $questionGroup=$this->loadQuestionGroup($id);
+
+        // Uncomment the following line if AJAX validation is needed
+        // $this->performAjaxValidation($question);
+
+        if(isset($_POST['QuestionGroup']))
+        {
+            $questionGroup->attributes=$_POST['QuestionGroup'];
+            if($questionGroup->save())
+                $this->redirect(array('surveys/update','id'=>$questionGroup->survey->id));
+        }
+
+        $this->render('update',array(
+            'questionGroup'=>$questionGroup,
+        ));
+    }
 
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
