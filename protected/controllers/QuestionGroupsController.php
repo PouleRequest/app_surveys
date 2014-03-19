@@ -36,14 +36,16 @@ class QuestionGroupsController extends Controller
 		));
 	}
 
-
-		public function actionIndex()
-		{
-			$dataProvider=new CActiveDataProvider('QuestionGroup');
-			$this->render('index',array(
-				'dataProvider'=>$dataProvider,
-			));
-		}
+	/**
+ 	* Lists all models.
+ 	*/
+	public function actionIndex()
+	{
+		$dataProvider=new CActiveDataProvider('QuestionGroup');
+		$this->render('index',array(
+			'dataProvider'=>$dataProvider,
+		));
+	}
 
 
 	/**
