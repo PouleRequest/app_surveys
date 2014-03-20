@@ -44,7 +44,7 @@ return array(
 			'rules'=>array(
                 'groups/<gid:\d+>/<controller:questions>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
                 'groups/<gid:\d+>/<controller:questions>/<action:\w+>'=>'<controller>/<action>',
-                
+                'questions/<qid:\d+>/<controller:propositions>/<action:\w+>'=>'<controller>/<action>',
 				'<controller:\w+>/<id:\d+>'=>'<controller>/view',
                 '<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
                 '<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
@@ -72,7 +72,7 @@ return array(
 			'routes'=>array(
 				array(
 					'class'=>'CFileLogRoute',
-					'levels'=>'error, warning, trace',
+					'levels'=>'trace,error, warning',
 				),
 				// uncomment the following to show log messages on web pages
 				/*
