@@ -100,14 +100,9 @@ class PropositionsController extends Controller
         return $proposition;
     }
     
-    public function filterCanModifySurvey($filterChain)
-    {
-        if ($this->question->survey->hasStartedTakings())
-            $this->render('//questions/error');
-        else
-            $filterChain->run();
-    }  
-    
+    /**
+     * Load the question specified in the URL
+     */
     public function filterGetQuestion($filterChain)
     {
         if (isset($_GET['qid']))
@@ -117,5 +112,13 @@ class PropositionsController extends Controller
             $this->question = $this->loadProposition($_GET['id'])->question;
         }
         $filterChain->run();
-    }  
+    }
+    
+    /**
+     * Throw an error message when the survey is locked
+     */
+    public function filterCanModifySurvey($filterChain)
+    {
+        $this->canModifySurvey($filterChain, $this->loadProposition($_GET['id'])->survey);
+    }
 }
