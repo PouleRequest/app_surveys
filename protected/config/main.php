@@ -10,7 +10,7 @@ return array(
 	'name'=>'Surveys',
 
 	// preloading 'log' component
-	'preload'=>array('log'),
+	'preload'=>array('log', 'sti_preloader'),
 
 	// autoloading model and component classes
 	'import'=>array(
@@ -35,6 +35,9 @@ return array(
 			// enable cookie-based authentication
 			'allowAutoLogin'=>true,
 		),
+		'sti_preloader' => array(
+            'class' => 'StiPreloader',
+         ),
 		// uncomment the following to enable URLs in path-format
 		'urlManager'=>array(
 			'urlFormat'=>'path',
@@ -69,7 +72,11 @@ return array(
 			'routes'=>array(
 				array(
 					'class'=>'CFileLogRoute',
+<<<<<<< HEAD
 					'levels'=>'trace,error, warning',
+=======
+					'levels'=>'error, warning, trace',
+>>>>>>> origin/dev
 				),
 				// uncomment the following to show log messages on web pages
 				/*

@@ -23,14 +23,14 @@ class QuestionsController extends Controller
      */
     public function actionCreate()
     {
-        $question = new Question;
-        $question->questionGroup = $this->questionGroup;
-        
         if (isset($_POST['Question'])) {
+            $question = new $_POST['Question']['type'];
+            $question->questionGroup = $this->questionGroup;
             
             // Prepare the 'settings' field for the DB
             // WARNING: array_filter will delete the '0' entries
             $_POST['Question']['settings'] = json_encode( array_filter($_POST['Question']['settings']) );
+            
             
             // Add one to the position of the last question in the QuestionGroup
             if (! isset($_POST['Question']['position'])) {
@@ -40,6 +40,10 @@ class QuestionsController extends Controller
             $question->attributes=$_POST['Question'];
             if ($question->save())
                 $this->redirect(array('survey/update', 'id'=>$question->survey->id));
+        }
+        else {
+            $question = new Question;
+            $question->questionGroup = $this->questionGroup;
         }
         
         
@@ -61,7 +65,6 @@ class QuestionsController extends Controller
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($question);
-
         if(isset($_POST['Question']))
         {
             $question->attributes=$_POST['Question'];
@@ -83,6 +86,7 @@ class QuestionsController extends Controller
      public function actionDelete($id)
      {
          $question = $this->loadQuestion($id);
+         throw new CHttpException(4000, "id: ". $question->survey->id);
          $surveyID = $question->survey->id;
          
          if ( $question->delete() )
@@ -106,7 +110,11 @@ class QuestionsController extends Controller
             throw new CHttpException(404,'The requested page does not exist.');
         return $question;
     }
-
+    
+    
+    /**
+     * Load the question group specified in the URL
+     */
     public function filterGetQuestionGroup($filterChain)
     {
         // Take the good questionGroup id from the survey/update page and verify it
