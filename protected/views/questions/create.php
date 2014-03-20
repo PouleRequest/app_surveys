@@ -4,7 +4,11 @@
         echo CHtml::textField('Question[title]', $question->title);
         
         echo CHtml::label('Type de question', 'Question[type]');
-        echo CHtml::dropDownList('Question[type]', $question->type, $question->types);
+        echo CHtml::dropDownList('Question[type]', $question->type, array(
+            'UniqueChoiceQuestion' => 'Question à choix unique',
+            'MultipleChoiceQuestion' => 'Question à choix multiple',
+            'RangeQuestion' => 'Etendue de nombre',
+            'RankingQuestion' => 'Question à évaluer'));
         
         
         echo CHtml::label('Valeur minimum', 'Question[settings][min]', array("class" => "Question_settings_multiple_choice Question_settings_range"));

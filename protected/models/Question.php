@@ -20,16 +20,6 @@ class Question extends MortimerActiveRecord
 {
     
     /**
-     * All the possibles question types of a question
-     */
-    public $types = array(
-            'UniqueChoiceQuestion' => 'Question à choix unique',
-            'MultipleChoiceQuestion' => 'Question à choix multiple',
-            'RangeQuestion' => 'Etendue de nombre',
-            'RankingQuestion' => 'Question à évaluer');
-    
-    
-	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
