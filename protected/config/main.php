@@ -72,11 +72,7 @@ return array(
 			'routes'=>array(
 				array(
 					'class'=>'CFileLogRoute',
-<<<<<<< HEAD
 					'levels'=>'trace,error, warning',
-=======
-					'levels'=>'error, warning, trace',
->>>>>>> origin/dev
 				),
 				// uncomment the following to show log messages on web pages
 				/*
