@@ -31,6 +31,6 @@
 	<br />
 	<!-- TODO: Add a list of questions in the group
 		 TODO: Add a button to create a new question in the group (groups/id/index ???)
-		 RODO: Add a button and dropdown list to add an existing question in the group? -->
+		 TODO: Add a button and dropdown list to add an existing question in the group? -->
 
 </div>
