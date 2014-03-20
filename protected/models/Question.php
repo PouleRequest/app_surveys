@@ -117,33 +117,4 @@ class Question extends MortimerActiveRecord
 	{
 		return parent::model($className);
 	}
-    
-    /**
-     * Before deleting a question, we must verify that his survey has no taking.
-     * And, we can delete it, we have to delete his propositions first
-     */
-     public function beforeDelete() 
-     {
-         // TODO: Verify this with P. Hurni
-         if ($this->survey->takings != null) {
-             
-            // FIXME: Show an error message here
-            echo "This survey has already a taking. You cannot delete a question from this survey.";
-            return false;
-            
-         }
-         else {
-             
-             $propositions = $this->propositions;
-             foreach($propositions as $oneProposition) {
-                // TODO: FOR DEBUG
-                //$oneProposition->delete();
-                echo "deleting proposition id ". $oneProposition->id ." !<br />";
-             }
-             
-             // TODO: FOR DEBUG
-             // return true;
-             return false;
-         }
-     }
 }
