@@ -58,7 +58,7 @@ class PropositionsController extends Controller
 		{
 			$proposition->attributes=$_POST['Proposition'];
 
-			$proposition->question_id = 102; //TODO: get that ID automatically. See the work on "questions" done by FireGhost
+			$proposition->question = $this->question;
 			
         	$proposition->position = $proposition->question->maxProposition+1;
 
