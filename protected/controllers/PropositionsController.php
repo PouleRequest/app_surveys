@@ -119,6 +119,12 @@ class PropositionsController extends Controller
      */
     public function filterCanModifySurvey($filterChain)
     {
-        $this->canModifySurvey($filterChain, $this->loadProposition($_GET['id'])->survey);
+        if (isset($_GET['id']))
+            $this->canModifySurvey($filterChain, $this->loadProposition($_GET['id'])->survey);
+        else if (isset($_GET['qid']))
+            $this->canModifySurvey($filterChain, Question::model()->findByPk($_GET['qid'])->survey); //TODO : see if we can make that cleaner
+        else
+            throw new CHttpException(404, 'No proposition ID or question ID specified. To create a proposition, use the link in the survey edit page.');
     }
+
 }
