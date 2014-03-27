@@ -4,6 +4,10 @@
 ?>
 
 <div class="view">
+	<?php echo CHtml::link("View", array('view', 'id'=>$data->id)); ?>
+	<?php echo CHtml::link("Update", array('update', 'id'=>$data->id)); ?>
+	<?php echo CHtml::link("Delete", array('delete', 'id'=>$data->id)); ?>
+	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('id')); ?>:</b>
 	<?php echo CHtml::link(CHtml::encode($data->id), array('view', 'id'=>$data->id)); ?>
