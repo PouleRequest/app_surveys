@@ -133,6 +133,11 @@ class QuestionsController extends Controller
      */
     public function filterCanModifySurvey($filterChain)
     {
-        $this->canModifySurvey($filterChain, $this->loadQuestion($_GET['id'])->survey);
+        if (isset($_GET['id']))
+            $this->canModifySurvey($filterChain, $this->loadQuestion($_GET['id'])->survey);
+        else if (isset($_GET['gid']))
+            $this->canModifySurvey($filterChain, QuestionGroup::model()->findByPk($_GET['gid'])->survey); //TODO : see if we can make that cleaner
+        else
+            throw new CHttpException(404, 'No question ID or questionGroup ID specified. To create a question, use the link in the survey edit page.');
     }
 }
