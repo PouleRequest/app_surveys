@@ -84,6 +84,17 @@ class PropositionsController extends Controller
 		if(!isset($_GET['ajax']))
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
 	}
+        
+     /**
+	 * Lists all models.
+	 */
+	public function actionIndex()
+	{
+		$dataProvider=new CActiveDataProvider('Proposition');
+			$this->render('index',array(
+				'dataProvider'=>$dataProvider,
+			));
+	}
     
     /**
      * Returns the data model based on the primary key given in the GET variable.
