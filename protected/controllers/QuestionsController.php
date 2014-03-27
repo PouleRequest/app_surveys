@@ -14,6 +14,7 @@ class QuestionsController extends Controller
     {
         return array(
             'GetQuestionGroup + create',
+            'CanModifySurvey + create, update, delete'
         );
     }
     
@@ -86,7 +87,6 @@ class QuestionsController extends Controller
      public function actionDelete($id)
      {
          $question = $this->loadQuestion($id);
-         throw new CHttpException(4000, "id: ". $question->survey->id);
          $surveyID = $question->survey->id;
          
          if ( $question->delete() )
@@ -127,5 +127,12 @@ class QuestionsController extends Controller
         
         $filterChain->run();
     }
-
+    
+    /**
+     * Throw an error message when the survey is locked
+     */
+    public function filterCanModifySurvey($filterChain)
+    {
+        $this->canModifySurvey($filterChain, $this->loadQuestion($_GET['id'])->survey);
+    }
 }
