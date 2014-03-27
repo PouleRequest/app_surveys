@@ -46,7 +46,7 @@ return array(
                 'groups/<gid:\d+>/<controller:questions>/<action:\w+>'=>'<controller>/<action>',
                 'questions/<qid:\d+>/<controller:propositions>/<action:\w+>'=>'<controller>/<action>',
                 'questions/<qid:\d+>/<controller:propositions>'=>'<controller>/index',
-                'takings/<tid:\d+>/<controller:participations>/<action:\w+>'=>'<controller>/<action>',
+                'takings/<tid:\d+>/<controller:participations>'=>'<controller>/index',
 				'<controller:\w+>/<id:\d+>'=>'<controller>/view',
                 '<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
                 '<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
