@@ -30,26 +30,26 @@ interface MortimerPolymorphicRelation {}
 class MortimerActiveRecord extends CActiveRecord
 {
   // override default relation types
-	const BELONGS_TO = 'MortimerBelongsToRelation';
-	const HAS_ONE    = 'MortimerHasOneRelation';
-	const HAS_MANY   = 'MortimerHasManyRelation';
+  const BELONGS_TO = 'MortimerBelongsToRelation';
+  const HAS_ONE    = 'MortimerHasOneRelation';
+  const HAS_MANY   = 'MortimerHasManyRelation';
 
   // add polymorphic relation types
-	const BELONGS_TO_POLYMORPHIC = 'MortimerBelongsToPolymorphicRelation';
-	const HAS_ONE_POLYMORPHIC    = 'MortimerHasOnePolymorphicRelation';
-	const HAS_MANY_POLYMORPHIC   = 'MortimerHasManyPolymorphicRelation';
-	
-	// need to pass a real CActiveRecord class name for BELONGS_TO relation to avoid frameword code to collapse.
-	const POLYMORPHIC = 'MortimerActiveRecord';
-	
-	/// DB column name used to store the STI record type. You may override it to your likings.
-	public static $typeColumnName = "type";
-	
-	/// DB column names for automatic timestamps
-	public static $createdAtColumnName = 'created_at';
-	public static $createdOnColumnName = 'created_on';
-	public static $updatedAtColumnName = 'updated_at';
-	public static $updatedOnColumnName = 'updated_on';
+  const BELONGS_TO_POLYMORPHIC = 'MortimerBelongsToPolymorphicRelation';
+  const HAS_ONE_POLYMORPHIC    = 'MortimerHasOnePolymorphicRelation';
+  const HAS_MANY_POLYMORPHIC   = 'MortimerHasManyPolymorphicRelation';
+  
+  // need to pass a real CActiveRecord class name for BELONGS_TO relation to avoid frameword code to collapse.
+  const POLYMORPHIC = 'MortimerActiveRecord';
+  
+  /// DB column name used to store the STI record type. You may override it to your likings.
+  public static $typeColumnName = "type";
+  
+  /// DB column names for automatic timestamps
+  public static $createdAtColumnName = 'created_at';
+  public static $createdOnColumnName = 'created_on';
+  public static $updatedAtColumnName = 'updated_at';
+  public static $updatedOnColumnName = 'updated_on';
 
   // subclasses names cache. Used to construct finders query condition for STI.
   private $_subclasses;
@@ -57,7 +57,7 @@ class MortimerActiveRecord extends CActiveRecord
   //=============================================================================
   // Hook in, delegate to our handlers
 
-  public function beforeValidate() {
+  protected function beforeValidate() {
     $this->_updateBelongsToIds(false);
     $result = parent::beforeValidate();
     if (!$this->_validateRelatedRecords())
@@ -65,16 +65,21 @@ class MortimerActiveRecord extends CActiveRecord
     return $result;
   }
   
-  public function beforeSave() {
+  protected function beforeSave() {
     $this->_stiBeforeSave();
     $this->_timestampsBeforeSave();
     $this->_updateBelongsToIds(true);
     return parent::beforeSave();
   }
 
-  public function afterSave() {
+  protected function afterSave() {
     $this->_saveRelatedRecords();
     return parent::afterSave();
+  }
+  
+  protected function beforeDelete() {
+    $this->_clearRelatedRecords();
+    return parent::beforeDelete();
   }
 
   //=============================================================================
@@ -108,84 +113,84 @@ class MortimerActiveRecord extends CActiveRecord
   // Convert IDs (PrimaryKey) assigned to BELONGS_TO and HAS_MANY relations
   // to their matching records, polymorphic aware.
 
-	// Override magic setter, so that we may transform PrimaryKey on relation to their record
-	public function __set($name,$value) {
-	  // is it a relation?
-	  if (array_key_exists($name, $this->getMetaData()->relations)) {
-  	  $relation = $this->getMetaData()->relations[$name];
-  		if (isset($relation)) {
-  		  // Yes, call the correct setter
-  		  if ($relation instanceof MortimerBelongsToRelation)
-  		    return $this->_setBelongsToRecord($relation, $value);
-  		  elseif ($relation instanceof MortimerHasOneRelation)
-  		    return $this->_setHasManyRecord($relation, array($value));
-  		  elseif ($relation instanceof MortimerHasManyRelation)
-  		    return $this->_setHasManyRecords($relation, $value);
-  		}
-  	}
-		return parent::__set($name,$value);
-	}
-	
-	private function _setBelongsToRecord($relation, $value) {
-	  // Apply only for supported relations
-	  if ($this->isRelationSupported($relation)) {
-	    // Resseting the relation?
-	    if ($value === null) {
-	      // Yes, put null everywhere
+  // Override magic setter, so that we may transform PrimaryKey on relation to their record
+  public function __set($name,$value) {
+    // is it a relation?
+    if (array_key_exists($name, $this->getMetaData()->relations)) {
+      $relation = $this->getMetaData()->relations[$name];
+      if (isset($relation)) {
+        // Yes, call the correct setter
+        if ($relation instanceof MortimerBelongsToRelation)
+          return $this->_setBelongsToRecord($relation, $value);
+        elseif ($relation instanceof MortimerHasOneRelation)
+          return $this->_setHasManyRecord($relation, array($value));
+        elseif ($relation instanceof MortimerHasManyRelation)
+          return $this->_setHasManyRecords($relation, $value);
+      }
+    }
+    return parent::__set($name,$value);
+  }
+  
+  private function _setBelongsToRecord($relation, $value) {
+    // Apply only for supported relations
+    if ($this->isRelationSupported($relation)) {
+      // Resseting the relation?
+      if ($value === null) {
+        // Yes, put null everywhere
         $this->setAttribute($relation->foreignKey, null);
-	      if ($relation instanceof MortimerPolymorphicRelation)
-	        $this->setAttribute($relation->typeColumn, null);
-	    }
-	    else {
-  	    // If the value is a PK, fetch its record. Only valid for non polymorphic relation
-  	    if (!is_object($value)) {
-  	      if ($relation instanceof MortimerPolymorphicRelation)
-  	        throw new CDbException("Can't set polymorphic relation with PK only!");
-	        
-  	      // Assign the attribute
+        if ($relation instanceof MortimerPolymorphicRelation)
+          $this->setAttribute($relation->typeColumn, null);
+      }
+      else {
+        // If the value is a PK, fetch its record. Only valid for non polymorphic relation
+        if (!is_object($value)) {
+          if ($relation instanceof MortimerPolymorphicRelation)
+            throw new CDbException("Can't set polymorphic relation with PK only!");
+          
+          // Assign the attribute
           $this->setAttribute($relation->foreignKey, $value);
-	        
-  	      // Load the record (given by attribute value)
-  	      $value = $this->getRelated($relation->name, true);
-  	    }
-	      
-	      // Set the attributes (foreignKey and type if polymorphic) from the record data
+          
+          // Load the record (given by attribute value)
+          $value = $this->getRelated($relation->name, true);
+        }
+        
+        // Set the attributes (foreignKey and type if polymorphic) from the record data
         $this->setAttribute($relation->foreignKey, $value->getPrimaryKey());
-	      if ($relation instanceof MortimerPolymorphicRelation)
-	        $this->setAttribute($relation->typeColumn, $this->getStiBaseClass($value));
+        if ($relation instanceof MortimerPolymorphicRelation)
+          $this->setAttribute($relation->typeColumn, $this->getStiBaseClass($value));
       }
       
       // Put the record in the relation cache
-	    parent::__set($relation->name, $value);
-	  }
-	}
+      parent::__set($relation->name, $value);
+    }
+  }
 
-	private function _setHasManyRecords($relation, $value) {
-	  // Apply only for supported relations
-	  if ($this->isRelationSupported($relation)) {
-	    // Split the array into records and ids
-	    $records = array();
-	    $ids = array();
-	    foreach ($value as $item) {
-	      is_object($item) ? $records[] = $item : $ids[] = $item;
-	    }
-	    
-	    // Load the missing records (only possible for non polymorphic relation)
-	    if (!empty($ids)) {
-	      if ($relation instanceof MortimerPolymorphicRelation)
-	        throw new CDbException("Can't set polymorphic relation with PK only!");
-	        
-	      $records = array_merge($records, CActiveRecord::model($relation->className)->findAllByPk($ids));
+  private function _setHasManyRecords($relation, $value) {
+    // Apply only for supported relations
+    if ($this->isRelationSupported($relation)) {
+      // Split the array into records and ids
+      $records = array();
+      $ids = array();
+      foreach ($value as $item) {
+        is_object($item) ? $records[] = $item : $ids[] = $item;
+      }
+      
+      // Load the missing records (only possible for non polymorphic relation)
+      if (!empty($ids)) {
+        if ($relation instanceof MortimerPolymorphicRelation)
+          throw new CDbException("Can't set polymorphic relation with PK only!");
+          
+        $records = array_merge($records, CActiveRecord::model($relation->className)->findAllByPk($ids));
       }
       
       // Check for correct related object types
       foreach ($records as $record) {
         if (! $record instanceof $relation->className)
-	        throw new CDbException("Invalid type for related object (".get_class($record)." for $relation->name)");
+          throw new CDbException("Invalid type for related object (".get_class($record)." for $relation->name)");
       }
       
-	    // Should we apply directly?
-	    if ($relation->autoApply) {
+      // Should we apply directly?
+      if ($relation->autoApply) {
         // If autoSave is enabled, save the new records
         if ($relation->autoSave) {
           $this->_saveNewRecords($records);
@@ -193,24 +198,24 @@ class MortimerActiveRecord extends CActiveRecord
         
         // link the current records
         $this->_saveHasManyRelation($relation, $records);
-	    }
-	    
+      }
+      
       // Put the records in the relation cache
-	    parent::__set($relation->name, $records);
-	  }
-	}
+      parent::__set($relation->name, $records);
+    }
+  }
 
   //=============================================================================
   // Convert object behind BELONGS_TO to their id attribute, polymorphic aware.
 
-	private function _updateBelongsToIds($saveTime = true) {
-		foreach ($this->getMetaData()->relations as $relation) {
-		  if ($relation instanceof MortimerBelongsToRelation) {
-		    // Do we need to populate at validation time
-		    if (!$saveTime && count($this->getValidators($relation->foreignKey)) == 0)
-		      continue;
-		      
-		    // apply only when target was loaded, don't apply when not supported (customized relation)
+  private function _updateBelongsToIds($saveTime = true) {
+    foreach ($this->getMetaData()->relations as $relation) {
+      if ($relation instanceof MortimerBelongsToRelation) {
+        // Do we need to populate at validation time
+        if (!$saveTime && count($this->getValidators($relation->foreignKey)) == 0)
+          continue;
+          
+        // apply only when target was loaded, don't apply when not supported (customized relation)
         if (!$this->hasRelated($relation->name) || !$this->isRelationSupported($relation))
           continue;
 
@@ -237,20 +242,35 @@ class MortimerActiveRecord extends CActiveRecord
         
         // Set the foreignKey (and type if polymorphic) attributes
         $this->setAttribute($relation->foreignKey, $target_id);
-	      if ($relation instanceof MortimerPolymorphicRelation) {
-	        $this->setAttribute($relation->typeColumn, $target_type);
+        if ($relation instanceof MortimerPolymorphicRelation) {
+          $this->setAttribute($relation->typeColumn, $target_type);
         }
-		  }
-		}
-	}
+      }
+    }
+  }
 
   //=============================================================================
   // Save related objects behind HAS_MANY or HAS_ONE, polymorphic aware.
   
+  private function _clearRelatedRecords() {
+    foreach ($this->getMetaData()->relations as $relation) {
+      if ($relation instanceof MortimerHasManyRelation || $relation instanceof MortimerHasOneRelation) {
+        if (!$this->isRelationSupported($relation))
+          continue;
+        
+        $records = $relation instanceof MortimerHasOneRelation ? array($this->getRelated($relation->name, false)) : $this->getRelated($relation->name, false);
+
+        $criteria = new CDbCriteria();
+        $criteria->addInCondition(CActiveRecord::model($relation->className)->tableSchema->primaryKey, array_map(function($item){ return $item->primaryKey;}, $records));
+        $this->_clearRecords($relation, $criteria);
+      }
+    }
+  }  
+  
   // ensure new related records are valid
   private function _validateRelatedRecords() {
-		foreach ($this->getMetaData()->relations as $relation) {
-		  if ($relation instanceof MortimerHasManyRelation || $relation instanceof MortimerHasOneRelation) {
+    foreach ($this->getMetaData()->relations as $relation) {
+      if ($relation instanceof MortimerHasManyRelation || $relation instanceof MortimerHasOneRelation) {
         if (!$this->hasRelated($relation->name) || !$this->isRelationSupported($relation) || !$relation->autoSave)
           continue;
         
@@ -265,8 +285,8 @@ class MortimerActiveRecord extends CActiveRecord
   }
 
   private function _saveRelatedRecords() {
-		foreach ($this->getMetaData()->relations as $relation) {
-		  if ($relation instanceof MortimerHasManyRelation || $relation instanceof MortimerHasOneRelation) {
+    foreach ($this->getMetaData()->relations as $relation) {
+      if ($relation instanceof MortimerHasManyRelation || $relation instanceof MortimerHasOneRelation) {
         if (!$this->hasRelated($relation->name) || !$this->isRelationSupported($relation))
           continue;
           
@@ -281,7 +301,7 @@ class MortimerActiveRecord extends CActiveRecord
         
         // link the current records
         $this->_saveHasManyRelation($relation, $records);
-	    }
+      }
     }
   }
   
@@ -310,6 +330,18 @@ class MortimerActiveRecord extends CActiveRecord
     // remove no more related records
     $criteria = new CDbCriteria();
     $criteria->addNotInCondition(CActiveRecord::model($relation->className)->tableSchema->primaryKey, $relatedPKs);
+    $this->_clearRecords($relation, $criteria);
+    
+    // add not yet related records
+    $criteria = new CDbCriteria();
+    $criteria->addInCondition(CActiveRecord::model($relation->className)->tableSchema->primaryKey, $unrelatedPKs);
+    if ($relation instanceof MortimerPolymorphicRelation)
+      CActiveRecord::model($relation->className)->updateAll(array($relation->foreignKey => $this->getPrimaryKey(), $relation->typeColumn => $this->getStiBaseClass()), $criteria);
+    else
+      CActiveRecord::model($relation->className)->updateAll(array($relation->foreignKey => $this->getPrimaryKey()), $criteria);
+  }
+  
+  private function _clearRecords($relation, $criteria) {
     if ($relation instanceof MortimerPolymorphicRelation)
       $criteria->addColumnCondition(array($relation->foreignKey => $this->getPrimaryKey(), $relation->typeColumn => $this->getStiBaseClass()));
     else
@@ -332,37 +364,29 @@ class MortimerActiveRecord extends CActiveRecord
         else
           CActiveRecord::model($relation->className)->updateAll(array($relation->foreignKey => null), $criteria);
     }
-    
-    // add not yet related records
-    $criteria = new CDbCriteria();
-    $criteria->addInCondition(CActiveRecord::model($relation->className)->tableSchema->primaryKey, $unrelatedPKs);
-    if ($relation instanceof MortimerPolymorphicRelation)
-      CActiveRecord::model($relation->className)->updateAll(array($relation->foreignKey => $this->getPrimaryKey(), $relation->typeColumn => $this->getStiBaseClass()), $criteria);
-    else
-      CActiveRecord::model($relation->className)->updateAll(array($relation->foreignKey => $this->getPrimaryKey()), $criteria);
   }
 
   //=============================================================================
   // Timestamps handling
   // Will fill created_at, created_on, updated_at, updated_on attributes if they exists
   
-	private function _timestampsBeforeSave() {
+  private function _timestampsBeforeSave() {
     if ($this->isNewRecord) {
-  	  if ($this->hasAttribute(self::$createdAtColumnName)) {
-  	    $this->{self::$createdAtColumnName} = new CDbExpression('NOW()');
-  	  }
-  	  if ($this->hasAttribute(self::$createdOnColumnName)) {
-  	    $this->{self::$createdOnColumnName} = new CDbExpression('NOW()');
-  	  }
+      if ($this->hasAttribute(self::$createdAtColumnName)) {
+        $this->{self::$createdAtColumnName} = new CDbExpression('NOW()');
+      }
+      if ($this->hasAttribute(self::$createdOnColumnName)) {
+        $this->{self::$createdOnColumnName} = new CDbExpression('NOW()');
+      }
     }
-	  if ($this->hasAttribute(self::$updatedAtColumnName)) {
-	    $this->{self::$updatedAtColumnName} = new CDbExpression('NOW()');
-	  }
-	  if ($this->hasAttribute(self::$updatedOnColumnName)) {
-	    $this->{self::$updatedOnColumnName} = new CDbExpression('NOW()');
-	  }
-	}
-	  
+    if ($this->hasAttribute(self::$updatedAtColumnName)) {
+      $this->{self::$updatedAtColumnName} = new CDbExpression('NOW()');
+    }
+    if ($this->hasAttribute(self::$updatedOnColumnName)) {
+      $this->{self::$updatedOnColumnName} = new CDbExpression('NOW()');
+    }
+  }
+    
   //=============================================================================
   // STI: Single Table Inheritance
   
@@ -399,21 +423,21 @@ class MortimerActiveRecord extends CActiveRecord
   }
 
   // Construct subclasses list only once
-	public static function model($className=__CLASS__) {
-	  $instance = parent::model($className);
-	  if ($instance->hasAttribute(self::$typeColumnName) && !$instance->_subclasses) {
-	    // Get the subclasses and keep them in this static instance
-	    $instance->_subclasses = static::_getSelfAndSubclasses($className);
+  public static function model($className=__CLASS__) {
+    $instance = parent::model($className);
+    if ($instance->hasAttribute(self::$typeColumnName) && !$instance->_subclasses) {
+      // Get the subclasses and keep them in this static instance
+      $instance->_subclasses = static::_getSelfAndSubclasses($className);
     }
-		return $instance;
-	}
+    return $instance;
+  }
 
   // Helper function
   private static function _getSelfAndSubclasses($parentClassName) {
     $classes = array($parentClassName);
     foreach (get_declared_classes() as $className) {
-    	if (is_subclass_of($className, $parentClassName))
-    		$classes[] = $className;
+      if (is_subclass_of($className, $parentClassName))
+        $classes[] = $className;
     }
     return $classes;
   }
@@ -421,14 +445,14 @@ class MortimerActiveRecord extends CActiveRecord
   //=============================================================================
   // Polymorphic Associations support
 
-	public function getActiveFinder($with) {
-	  if (is_string($with) && $this->getActiveRelation($with) instanceof MortimerBelongsToPolymorphicRelation)
-		  return new MortimerBelongsToPolymorphicActiveFinder($this,$with);
-		  
-	  if (is_string($with) && $this->getActiveRelation($with) instanceof MortimerHasManyPolymorphicRelation)
-		  return new MortimerHasManyPolymorphicActiveFinder($this,$with);
-		
-		return parent::getActiveFinder($with);
-	}
+  public function getActiveFinder($with) {
+    if (is_string($with) && $this->getActiveRelation($with) instanceof MortimerBelongsToPolymorphicRelation)
+      return new MortimerBelongsToPolymorphicActiveFinder($this,$with);
+      
+    if (is_string($with) && $this->getActiveRelation($with) instanceof MortimerHasManyPolymorphicRelation)
+      return new MortimerHasManyPolymorphicActiveFinder($this,$with);
+    
+    return parent::getActiveFinder($with);
+  }
 
 }
