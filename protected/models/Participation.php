@@ -54,6 +54,16 @@ class Participation extends CActiveRecord
 		);
 	}
 
+    
+    public function forTaking($taking)
+    {
+        $this->getDbCriteria()->mergeWith(array(
+            'condition'=>'taking_id = :tid',
+            'params'=>array('tid' => $taking->primaryKey),
+        ));
+        return $this;
+    }    
+    
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */
@@ -67,6 +77,12 @@ class Participation extends CActiveRecord
 			'participant_token' => 'Participant Token',
 		);
 	}
+    
+    /*
+    public function person() {
+        return 
+    }
+    */
 
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.

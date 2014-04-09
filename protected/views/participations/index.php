@@ -1,6 +1,7 @@
-<?php 
-$this->widget('zii.widgets.CListView', array(
-	'dataProvider'=>$dataProvider,
-	'itemView'=>'_view'
-));
+<?php
+
+foreach ($participations as $participation) {
+    echo $participation->person_id.'<br/>';
+}
+
 ?>
