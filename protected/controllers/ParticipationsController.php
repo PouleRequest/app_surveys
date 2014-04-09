@@ -9,15 +9,40 @@ class ParticipationsController extends Controller
 	 */
 	public $layout='//layouts/column2';
     
+    protected $taking;
+    
+    public function filters()
+    {
+        return array(
+            'GetTaking',
+        );
+    }
+    
     /**
 	 * Lists all models.
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Participation');
+        $participations = Participation::model()->forTaking($this->taking)->findAll();
 		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
+			'participations'=>$participations,
 		));
 	}
+    
+    /**
+     * Load the question group specified in the URL
+     */
+    public function filterGetTaking($filterChain)
+    {
+        // Take the good questionGroup id from the survey/update page and verify it
+        if (isset($_GET['tid'])) {
+            if (!($this->taking = Taking::model()->findByPk($_GET['tid'])))
+                throw new CHttpException(404, 'Error. There is no participant');
+        }
+        else
+            throw new CHttpException(404, 'The taking ID is not specified.');
+        
+        $filterChain->run();
+    }
  
 }
