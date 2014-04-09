@@ -55,7 +55,7 @@ class Question extends MortimerActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'answers' => array(self::HAS_MANY, 'Answer', 'question_id'),
-			'propositions' => array(self::HAS_MANY, 'Proposition', 'question_id'),
+            'propositions' => array(self::HAS_MANY, 'Proposition', 'question_id', 'dependant' => 'delete'),
 			'questionGroup' => array(self::BELONGS_TO, 'QuestionGroup', 'question_group_id'),
 			'survey' => array(self::HAS_ONE, 'Survey', array('survey_id'=>'id'), 'through'=>'questionGroup'),
 			'maxProposition' => array(self::STAT, 'Proposition', 'question_id', 'select'=>'MAX(position)')
