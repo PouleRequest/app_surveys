@@ -72,6 +72,18 @@ class PropositionsController extends Controller
 	}
           
     /**
+     * Displays a particular model.
+     * @param integer $id the ID of the model to be displayed
+     */
+    public function actionView($id)
+    {
+        $this->render('view',array(
+            'proposition'=>$this->loadProposition($id),
+        ));
+    }
+
+
+    /**
 	 * Deletes a particular proposition.
 	 * If deletion is successful, the browser will be redirected to the 'admin' page.
 	 * @param integer $id the ID of the proposition to be deleted
