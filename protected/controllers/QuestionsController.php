@@ -133,6 +133,6 @@ class QuestionsController extends Controller
      */
     public function filterCanModifySurvey($filterChain)
     {
-        $this->canModifySurvey($filterChain, $this->loadQuestion($_GET['id'])->survey);
+         $this->canModifySurvey($filterChain, $this->questionGroup ? $this->questionGroup->survey : $this->loadQuestion($_GET['id'])->survey);
     }
 }
