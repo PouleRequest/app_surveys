@@ -31,13 +31,24 @@ class SurveysController extends Controller
 		));
 	}
 
-		public function actionIndex()
-		{
-			$dataProvider=new CActiveDataProvider('Survey');
-			$this->render('index',array(
-				'dataProvider'=>$dataProvider,
-			));
-		}
+	public function actionIndex()
+	{
+		$dataProvider=new CActiveDataProvider('Survey');
+		$this->render('index',array(
+			'dataProvider'=>$dataProvider,
+		));
+	}
+
+	/**
+	 * Displays a particular model.
+	 * @param integer $id the ID of the model to be displayed
+	 */
+	public function actionView($id)
+	{
+		$this->render('view',array(
+			'survey'=>$this->loadSurvey($id),
+		));
+	}
 
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
