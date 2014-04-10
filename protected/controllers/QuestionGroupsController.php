@@ -47,6 +47,17 @@ class QuestionGroupsController extends Controller
 		));
 	}
 
+	/**
+	 * Displays a particular model.
+	 * @param integer $id the ID of the model to be displayed
+	 */
+	public function actionView($id)
+	{
+		$this->render('view',array(
+			'questionGroup'=>$this->loadQuestionGroup($id),
+		));
+	}
+
     /**
      * Updates a questiongroup.
      * If update is successful, the browser will be redirected to the survey's update page
