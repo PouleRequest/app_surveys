@@ -33,11 +33,12 @@ class Participation extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('taking_id', 'required'),
-			array('taking_id, person_id', 'numerical', 'integerOnly'=>true),
+			array('taking_id, person_id, concrete_class', 'numerical', 'integerOnly'=>true),
 			array('type, participant_token', 'length', 'max'=>63),
+			array('person_type, section', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, type, taking_id, person_id, participant_token', 'safe', 'on'=>'search'),
+			array('id, type, taking_id, person_id, participant_token, person_type, concrete_class, section', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -54,7 +55,9 @@ class Participation extends CActiveRecord
 		);
 	}
 
-    
+    /**
+     * Return the ID of this taking
+     */
     public function forTaking($taking)
     {
         $this->getDbCriteria()->mergeWith(array(
@@ -75,14 +78,11 @@ class Participation extends CActiveRecord
 			'taking_id' => 'Taking',
 			'person_id' => 'Person',
 			'participant_token' => 'Participant Token',
+			'person_type' => 'Person Type',
+			'concrete_class' => 'Concrete Class',
+			'section' => 'Section',
 		);
 	}
-    
-    /*
-    public function person() {
-        return 
-    }
-    */
 
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.
@@ -107,6 +107,9 @@ class Participation extends CActiveRecord
 		$criteria->compare('taking_id',$this->taking_id);
 		$criteria->compare('person_id',$this->person_id);
 		$criteria->compare('participant_token',$this->participant_token,true);
+        $criteria->compare('person_type',$this->person_type,true);
+        $criteria->compare('concrete_class',$this->concrete_class);
+        $criteria->compare('section',$this->section,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
