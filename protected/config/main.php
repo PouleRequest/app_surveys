@@ -17,6 +17,7 @@ return array(
 		'application.models.*',
 		'application.components.*',
 		'ext.mortimer_active_record.MortimerActiveRecord',
+		'ext.PhpActiveResource.ActiveResource',
 	),
 
 	'modules'=>array(
