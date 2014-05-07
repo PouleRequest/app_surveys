@@ -7,6 +7,13 @@ class QuestionGroupsController extends Controller
 	 * using two-column layout. See 'protected/views/layouts/column2.php'.
 	 */
 	public $layout='//layouts/column2';
+    
+    public function filters()
+    {
+        return array(
+            'CanModifySurvey + update, create, delete',
+        );
+    }
 
 	/**
 	 * Creates a new model.
@@ -23,7 +30,7 @@ class QuestionGroupsController extends Controller
 		{
 			$questionGroup->attributes=$_POST['QuestionGroup'];
 
-			$questionGroup->survey_id = 1; //TODO: get that ID automatically. See the work on "questions" done by FireGhost
+			$questionGroup->survey_id = $this->survey_id;
 			
         	$questionGroup->position = $questionGroup->survey->maxQuestionGroup+1;
 
@@ -97,5 +104,11 @@ class QuestionGroupsController extends Controller
 		return $questionGroup;
 	}
 
-	//TODO: Add a filter to block edits if the survey is locked (see PropositionsController)
+    /**
+     * Throw an error message when the survey is locked
+     */
+    public function filterCanModifySurvey($filterChain)
+    {
+        $this->canModifySurvey($filterChain, $this->loadQuestionGroup($_GET['id'])->survey);
+    }
 }
