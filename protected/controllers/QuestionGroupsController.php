@@ -97,5 +97,5 @@ class QuestionGroupsController extends Controller
 		return $questionGroup;
 	}
 
-	//TODO: Add a filter to block edits if the survey is locked
+	//TODO: Add a filter to block edits if the survey is locked (see PropositionsController)
 }
