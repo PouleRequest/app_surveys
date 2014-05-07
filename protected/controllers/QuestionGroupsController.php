@@ -96,4 +96,6 @@ class QuestionGroupsController extends Controller
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $questionGroup;
 	}
+
+	//TODO: Add a filter to block edits if the survey is locked
 }
