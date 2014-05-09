@@ -8,6 +8,13 @@ class QuestionGroupsController extends Controller
 	 */
 	public $layout='//layouts/column2';
     
+	
+    public function filters()
+    {
+        return array(
+            'CanModifySurvey + update, create, delete',
+        );
+    }
 
 	/**
 	 * Creates a new model.
@@ -24,7 +31,7 @@ class QuestionGroupsController extends Controller
 		{
 			$questionGroup->attributes=$_POST['QuestionGroup'];
 
-			$questionGroup->survey_id = 1; //TODO: get that ID automatically. See the work on "questions" done by FireGhost
+			$questionGroup->survey_id = $this->survey_id;
 			
         	$questionGroup->position = $questionGroup->survey->maxQuestionGroup+1;
 
@@ -75,7 +82,7 @@ class QuestionGroupsController extends Controller
         {
             $questionGroup->attributes=$_POST['QuestionGroup'];
             if($questionGroup->save())
-                $this->redirect(array('surveys/update','id'=>$questionGroup->survey->id));
+                $this->redirect(array('surveys/view','id'=>$questionGroup->survey->id));
         }
 
         $this->render('update',array(
@@ -97,4 +104,12 @@ class QuestionGroupsController extends Controller
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $questionGroup;
 	}
+
+    /**
+     * Throw an error message when the survey is locked
+     */
+    public function filterCanModifySurvey($filterChain)
+    {
+        $this->canModifySurvey($filterChain, $this->loadQuestionGroup($_GET['id'])->survey);
+    }
 }
