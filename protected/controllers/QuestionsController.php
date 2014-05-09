@@ -18,6 +18,7 @@ class QuestionsController extends Controller
         );
     }
     
+    
     /**
      * Create a new question.
      * If creation is successful, the browser will be redirected to the survey editing page
