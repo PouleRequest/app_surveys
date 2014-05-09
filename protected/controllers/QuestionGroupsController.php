@@ -81,7 +81,7 @@ class QuestionGroupsController extends Controller
         {
             $questionGroup->attributes=$_POST['QuestionGroup'];
             if($questionGroup->save())
-                $this->redirect(array('surveys/update','id'=>$questionGroup->survey->id));
+                $this->redirect(array('surveys/view','id'=>$questionGroup->survey->id));
         }
 
         $this->render('update',array(

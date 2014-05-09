@@ -80,7 +80,7 @@ class QuestionsController extends Controller
         {
             $question->attributes=$_POST['Question'];
             if($question->save())
-                $this->redirect(array('surveys/update','id'=>$question->survey->id));
+                $this->redirect(array('surveys/view','id'=>$question->survey->id));
         }
 
         $this->render('update',array(

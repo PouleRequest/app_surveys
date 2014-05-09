@@ -35,7 +35,7 @@ class PropositionsController extends Controller
         {
             $proposition->attributes=$_POST['Proposition'];
             if($proposition->save())
-                $this->redirect(array('surveys/update','id'=>$proposition->survey->id));
+                $this->redirect(array('surveys/view','id'=>$proposition->survey->id));
         }
 
         $this->render('update',array(
