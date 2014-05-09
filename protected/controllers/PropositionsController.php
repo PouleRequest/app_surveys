@@ -64,6 +64,8 @@ class PropositionsController extends Controller
 
 			if($proposition->save())
 				$this->redirect(array('view','id'=>$proposition->id));
+            
+            // TODO: Impossible to save new propositions !!!
 		}
 
 		$this->render('create',array(
