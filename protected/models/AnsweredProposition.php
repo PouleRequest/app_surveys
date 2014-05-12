@@ -32,12 +32,13 @@ class AnsweredProposition extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('answer_id, proposition_id', 'required'),
-			array('answer_id, proposition_id, position', 'numerical', 'integerOnly'=>true),
+			array('participation_id, proposition_id', 'required'),
+			array('participation_id, proposition_id, position', 'numerical', 'integerOnly'=>true),
+            array('created_at, updated_at', 'safe'),
 			array('body', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, answer_id, proposition_id, body, position', 'safe', 'on'=>'search'),
+			array('id, participation_id, proposition_id, body, position created_at, updated_at', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -49,7 +50,7 @@ class AnsweredProposition extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'answer' => array(self::BELONGS_TO, 'Answer', 'answer_id'),
+			'participation' => array(self::BELONGS_TO, 'Participation', 'participation_id'),
 			'proposition' => array(self::BELONGS_TO, 'Proposition', 'proposition_id'),
 		);
 	}
@@ -61,10 +62,12 @@ class AnsweredProposition extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'answer_id' => 'Answer',
+			'participation_id' => 'Participation',
 			'proposition_id' => 'Proposition',
 			'body' => 'Body',
 			'position' => 'Position',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
 		);
 	}
 
@@ -87,10 +90,12 @@ class AnsweredProposition extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('answer_id',$this->answer_id);
+		$criteria->compare('participation_id',$this->participation_id);
 		$criteria->compare('proposition_id',$this->proposition_id);
 		$criteria->compare('body',$this->body,true);
 		$criteria->compare('position',$this->position);
+        $criteria->compare('created_at',$this->created_at,true);
+        $criteria->compare('updated_at',$this->updated_at,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

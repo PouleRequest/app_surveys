@@ -16,20 +16,10 @@
  * @property Propositions[] $propositions
  * @property QuestionGroups $questionGroup
  */
-class Question extends CActiveRecord
+class Question extends MortimerActiveRecord
 {
     
     /**
-     * All the possibles question types of a question
-     */
-    public $types = array(
-            'UniqueChoiceQuestion' => 'Question à choix unique',
-            'MultipleChoiceQuestion' => 'Question à choix multiple',
-            'RangeQuestion' => 'Etendue de nombre',
-            'RankingQuestion' => 'Question à évaluer');
-    
-    
-	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
@@ -64,8 +54,7 @@ class Question extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'answers' => array(self::HAS_MANY, 'Answer', 'question_id'),
-			'propositions' => array(self::HAS_MANY, 'Proposition', 'question_id'),
+            'propositions' => array(self::HAS_MANY, 'Proposition', 'question_id', 'dependant' => 'delete'),
 			'questionGroup' => array(self::BELONGS_TO, 'QuestionGroup', 'question_group_id'),
 			'survey' => array(self::HAS_ONE, 'Survey', array('survey_id'=>'id'), 'through'=>'questionGroup'),
 			'maxProposition' => array(self::STAT, 'Proposition', 'question_id', 'select'=>'MAX(position)')
@@ -127,33 +116,4 @@ class Question extends CActiveRecord
 	{
 		return parent::model($className);
 	}
-    
-    /**
-     * Before deleting a question, we must verify that his survey has no taking.
-     * And, we can delete it, we have to delete his propositions first
-     */
-     public function beforeDelete() 
-     {
-         // TODO: Verify this with P. Hurni
-         if ($this->survey->takings != null) {
-             
-            // FIXME: Show an error message here
-            echo "This survey has already a taking. You cannot delete a question from this survey.";
-            return false;
-            
-         }
-         else {
-             
-             $propositions = $this->propositions;
-             foreach($propositions as $oneProposition) {
-                // TODO: FOR DEBUG
-                //$oneProposition->delete();
-                echo "deleting proposition id ". $oneProposition->id ." !<br />";
-             }
-             
-             // TODO: FOR DEBUG
-             // return true;
-             return false;
-         }
-     }
 }

@@ -7,6 +7,14 @@ class QuestionGroupsController extends Controller
 	 * using two-column layout. See 'protected/views/layouts/column2.php'.
 	 */
 	public $layout='//layouts/column2';
+    
+	
+    public function filters()
+    {
+        return array(
+            'CanModifySurvey + update, create, delete',
+        );
+    }
 
 	/**
 	 * Creates a new model.
@@ -23,7 +31,7 @@ class QuestionGroupsController extends Controller
 		{
 			$questionGroup->attributes=$_POST['QuestionGroup'];
 
-			$questionGroup->survey_id = 1; //TODO: get that ID automatically. See the work on "questions" done by FireGhost
+			$questionGroup->survey_id = $this->survey_id;
 			
         	$questionGroup->position = $questionGroup->survey->maxQuestionGroup+1;
 
@@ -35,6 +43,52 @@ class QuestionGroupsController extends Controller
 			'questionGroup'=>$questionGroup,
 		));
 	}
+
+	/**
+ 	* Lists all models.
+ 	*/
+	public function actionIndex()
+	{
+		$dataProvider=new CActiveDataProvider('QuestionGroup');
+		$this->render('index',array(
+			'dataProvider'=>$dataProvider,
+		));
+	}
+
+	/**
+	 * Displays a particular model.
+	 * @param integer $id the ID of the model to be displayed
+	 */
+	public function actionView($id)
+	{
+		$this->render('view',array(
+			'questionGroup'=>$this->loadQuestionGroup($id),
+		));
+	}
+
+    /**
+     * Updates a questiongroup.
+     * If update is successful, the browser will be redirected to the survey's update page
+     * @param integer $id the ID of the questiongroup to be updated
+     */
+    public function actionUpdate($id)
+    {
+        $questionGroup=$this->loadQuestionGroup($id);
+
+        // Uncomment the following line if AJAX validation is needed
+        // $this->performAjaxValidation($question);
+
+        if(isset($_POST['QuestionGroup']))
+        {
+            $questionGroup->attributes=$_POST['QuestionGroup'];
+            if($questionGroup->save())
+                $this->redirect(array('surveys/view','id'=>$questionGroup->survey->id));
+        }
+
+        $this->render('update',array(
+            'questionGroup'=>$questionGroup,
+        ));
+    }
 
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
@@ -50,4 +104,12 @@ class QuestionGroupsController extends Controller
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $questionGroup;
 	}
+
+    /**
+     * Throw an error message when the survey is locked
+     */
+    public function filterCanModifySurvey($filterChain)
+    {
+        $this->canModifySurvey($filterChain, $this->loadQuestionGroup($_GET['id'])->survey);
+    }
 }

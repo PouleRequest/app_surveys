@@ -10,13 +10,14 @@ return array(
 	'name'=>'Surveys',
 
 	// preloading 'log' component
-	'preload'=>array('log'),
+	'preload'=>array('log', 'sti_preloader'),
 
 	// autoloading model and component classes
 	'import'=>array(
 		'application.models.*',
 		'application.components.*',
 		'ext.mortimer_active_record.MortimerActiveRecord',
+		'ext.PhpActiveResource.ActiveResource',
 	),
 
 	'modules'=>array(
@@ -35,13 +36,18 @@ return array(
 			// enable cookie-based authentication
 			'allowAutoLogin'=>true,
 		),
+		'sti_preloader' => array(
+            'class' => 'StiPreloader',
+         ),
 		// uncomment the following to enable URLs in path-format
 		'urlManager'=>array(
 			'urlFormat'=>'path',
 			'rules'=>array(
                 'groups/<gid:\d+>/<controller:questions>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
                 'groups/<gid:\d+>/<controller:questions>/<action:\w+>'=>'<controller>/<action>',
-                
+                'questions/<qid:\d+>/<controller:propositions>/<action:\w+>'=>'<controller>/<action>',
+                'questions/<qid:\d+>/<controller:propositions>'=>'<controller>/index',
+                'takings/<tid:\d+>/<controller:participations>'=>'<controller>/index',
 				'<controller:\w+>/<id:\d+>'=>'<controller>/view',
                 '<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
                 '<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
@@ -69,7 +75,7 @@ return array(
 			'routes'=>array(
 				array(
 					'class'=>'CFileLogRoute',
-					'levels'=>'error, warning',
+					'levels'=>'trace,error, warning',
 				),
 				// uncomment the following to show log messages on web pages
 				/*

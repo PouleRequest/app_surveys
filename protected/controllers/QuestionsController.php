@@ -7,6 +7,16 @@ class QuestionsController extends Controller
      * using two-column layout. See 'protected/views/layouts/column2.php'.
      */
     public $layout='//layouts/column2';
+
+    protected $questionGroup;
+    
+    public function filters()
+    {
+        return array(
+            'GetQuestionGroup + create',
+            'CanModifySurvey + create, update, delete'
+        );
+    }
     
     
     /**
@@ -15,23 +25,14 @@ class QuestionsController extends Controller
      */
     public function actionCreate()
     {
-        $question = new Question;
-        
-        
         if (isset($_POST['Question'])) {
+            $question = new $_POST['Question']['type'];
+            $question->questionGroup = $this->questionGroup;
             
             // Prepare the 'settings' field for the DB
             // WARNING: array_filter will delete the '0' entries
             $_POST['Question']['settings'] = json_encode( array_filter($_POST['Question']['settings']) );
             
-            // Take the good questionGroup id from the survey/update page and verify it
-            if (isset($_GET['gid']))
-                $question->question_group_id = $_GET['gid'];
-            else
-                throw new CHttpException(404, 'The question group ID is not specified. To create a question, use the link in the survey edit page.');
-            
-            if ($question->questionGroup == null)
-                throw new CHttpException(404, 'The question group assiocated to this question does not exist. To create a question, use the link in the survey edit page.');
             
             // Add one to the position of the last question in the QuestionGroup
             if (! isset($_POST['Question']['position'])) {
@@ -42,6 +43,10 @@ class QuestionsController extends Controller
             if ($question->save())
                 $this->redirect(array('survey/update', 'id'=>$question->survey->id));
         }
+        else {
+            $question = new Question;
+            $question->questionGroup = $this->questionGroup;
+        }
         
         
         
@@ -49,7 +54,17 @@ class QuestionsController extends Controller
             'question'=>$question,
         ));
     }
-    
+
+    /**
+     * Displays a particular model.
+     * @param integer $id the ID of the model to be displayed
+     */
+    public function actionView($id)
+    {
+        $this->render('view',array(
+            'question'=>$this->loadQuestion($id),
+        ));
+    }
     
     /**
      * Updates a question.
@@ -62,12 +77,11 @@ class QuestionsController extends Controller
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($question);
-
         if(isset($_POST['Question']))
         {
             $question->attributes=$_POST['Question'];
             if($question->save())
-                $this->redirect(array('surveys/update','id'=>$question->survey->id));
+                $this->redirect(array('surveys/view','id'=>$question->survey->id));
         }
 
         $this->render('update',array(
@@ -107,5 +121,29 @@ class QuestionsController extends Controller
             throw new CHttpException(404,'The requested page does not exist.');
         return $question;
     }
-
+    
+    
+    /**
+     * Load the question group specified in the URL
+     */
+    public function filterGetQuestionGroup($filterChain)
+    {
+        // Take the good questionGroup id from the survey/update page and verify it
+        if (isset($_GET['gid'])) {
+            if (!($this->questionGroup = QuestionGroup::model()->findByPk($_GET['gid'])))
+                throw new CHttpException(404, 'The question group assiocated to this question does not exist. To create a question, use the link in the survey edit page.');
+        }
+        else
+            throw new CHttpException(404, 'The question group ID is not specified. To create a question, use the link in the survey edit page.');
+        
+        $filterChain->run();
+    }
+    
+    /**
+     * Throw an error message when the survey is locked
+     */
+    public function filterCanModifySurvey($filterChain)
+    {
+         $this->canModifySurvey($filterChain, $this->questionGroup ? $this->questionGroup->survey : $this->loadQuestion($_GET['id'])->survey);
+    }
 }
